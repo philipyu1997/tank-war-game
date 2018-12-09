@@ -157,7 +157,7 @@ public class Game extends Canvas implements Runnable {
             p.setVelY(5);
         } else if (key == KeyEvent.VK_UP) {
             p.setVelY(-5);
-        } else if (key == KeyEvent.VK_ESCAPE) {
+        } else if (key == KeyEvent.VK_Q) {
             System.out.println("\nExiting...");
             System.exit(1);
         }

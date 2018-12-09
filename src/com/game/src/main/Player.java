@@ -33,6 +33,22 @@ public class Player {
         x += velX;
         y += velY;
 
+        // LEFT
+        if (x <= 0)
+            x = 0;
+
+        // RIGHT
+        if (x >= 640 - player.getWidth())
+            x = 640 - player.getWidth();
+
+        // TOP
+        if (y < 0)
+            y = 0;
+
+        // BOTTOM
+        if (y >= 480 - player.getHeight() - 16)
+            y = 480 - player.getHeight() - 16;
+
     }
 
     public void render(Graphics g) {
