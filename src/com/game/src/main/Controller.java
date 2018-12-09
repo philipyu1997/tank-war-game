@@ -1,17 +1,21 @@
 package com.game.src.main;
 
+import com.game.src.classes.EntityA;
+import com.game.src.classes.EntityB;
+
 import java.awt.*;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Philip Yu
  */
 public class Controller {
 
-    private List<Entity> entityList = new LinkedList<>();
+    private LinkedList<EntityA> entityListA = new LinkedList<>();
+    private LinkedList<EntityB> entityListB = new LinkedList<>();
 
-    private Entity entity;
+    private EntityA entityA;
+    private EntityB entityB;
 
     private Game game;
 
@@ -23,36 +27,79 @@ public class Controller {
 
     public void tick() {
 
-        for (int i = 0; i < entityList.size(); ++i) {
-            entity = entityList.get(i);
+        // CLASS A
+        for (int i = 0; i < entityListA.size(); ++i) {
+            entityA = entityListA.get(i);
 
-            if (entity.getY() < 0) {
-                removeEntity(entity);
+            if (entityA.getY() < 0) {
+                removeEntity(entityA);
             }
 
-            entity.tick();
+            entityA.tick();
+        }
+
+        // CLASS B
+        for (int i = 0; i < entityListB.size(); ++i) {
+            entityB = entityListB.get(i);
+
+            if (entityB.getY() < 0) {
+                removeEntity(entityB);
+            }
+
+            entityB.tick();
         }
 
     }
 
     public void render(Graphics g) {
 
-        for (int i = 0; i < entityList.size(); ++i) {
-            entity = entityList.get(i);
-            entity.render(g);
+        // CLASS A
+        for (int i = 0; i < entityListA.size(); ++i) {
+            entityA = entityListA.get(i);
+            entityA.render(g);
+        }
+
+        // CLASS B
+        for (int i = 0; i < entityListB.size(); ++i) {
+            entityB = entityListB.get(i);
+            entityB.render(g);
         }
 
     }
 
-    public void addEntity(Entity block) {
+    public void addEntity(EntityA block) {
 
-        entityList.add(block);
+        entityListA.add(block);
 
     }
 
-    public void removeEntity(Entity block) {
+    public void removeEntity(EntityA block) {
 
-        entityList.remove(block);
+        entityListA.remove(block);
+
+    }
+
+    public void addEntity(EntityB block) {
+
+        entityListB.add(block);
+
+    }
+
+    public void removeEntity(EntityB block) {
+
+        entityListB.remove(block);
+
+    }
+
+    public LinkedList<EntityA> getEntityA() {
+
+        return entityListA;
+
+    }
+
+    public LinkedList<EntityB> getEntityB() {
+
+        return entityListB;
 
     }
 

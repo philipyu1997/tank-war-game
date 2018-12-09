@@ -1,14 +1,14 @@
 package com.game.src.main;
 
+import com.game.src.classes.EntityB;
+
 import java.awt.*;
 
 /**
  * @author Philip Yu
  */
-public class Enemy implements Entity {
+public class Enemy extends GameObject implements EntityB {
 
-    private double x;
-    private double y;
     private double velX;
     private double velY;
 
@@ -16,8 +16,7 @@ public class Enemy implements Entity {
 
     public Enemy(double x, double y, Textures tex) {
 
-        this.x = x;
-        this.y = y;
+        super(x, y);
         this.tex = tex;
 
     }
@@ -48,6 +47,12 @@ public class Enemy implements Entity {
     public void render(Graphics g) {
 
         g.drawImage(tex.enemy, (int) x, (int) y, null);
+
+    }
+
+    public Rectangle getBounds() {
+
+        return (new Rectangle((int) x, (int) y, 64, 64));
 
     }
 

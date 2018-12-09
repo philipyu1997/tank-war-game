@@ -1,10 +1,14 @@
 package com.game.src.main;
 
+import com.game.src.classes.EntityA;
+import com.game.src.classes.EntityB;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * @author Philip Yu
@@ -29,6 +33,10 @@ public class Game extends Canvas implements Runnable {
     private Controller c;
     private Textures tex;
     private Enemy enemy;
+
+    public LinkedList<EntityA> entityListA;
+    public LinkedList<EntityB> entityListB;
+
 
     public static void main(String[] args) {
 
@@ -152,34 +160,39 @@ public class Game extends Canvas implements Runnable {
         enemy = new Enemy(300, 200, tex);
         c = new Controller(this);
 
+        entityListA = c.getEntityA();
+        entityListB = c.getEntityB();
+
+        entityListB.add(enemy);
+
     }
 
     public void keyReleased(KeyEvent e) {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_D) {
             player.setVelX(0);
-        } else if (key == KeyEvent.VK_LEFT) {
+        } else if (key == KeyEvent.VK_A) {
             player.setVelX(0);
-        } else if (key == KeyEvent.VK_DOWN) {
+        } else if (key == KeyEvent.VK_S) {
             player.setVelY(0);
-        } else if (key == KeyEvent.VK_UP) {
+        } else if (key == KeyEvent.VK_D) {
             player.setVelY(0);
-        } else if (key == KeyEvent.VK_SPACE) {
+        } else if (key == KeyEvent.VK_ENTER) {
             isShooting = false;
         }
 
-        if (key == KeyEvent.VK_D) {
+        if (key == KeyEvent.VK_L) {
             enemy.setVelX(0);
-        } else if (key == KeyEvent.VK_A) {
+        } else if (key == KeyEvent.VK_J) {
             enemy.setVelX(0);
-        } else if (key == KeyEvent.VK_S) {
+        } else if (key == KeyEvent.VK_K) {
             enemy.setVelY(0);
-        } else if (key == KeyEvent.VK_W) {
+        } else if (key == KeyEvent.VK_I) {
             enemy.setVelY(0);
-        } else if (key == KeyEvent.VK_ENTER) {
-            isShooting = false;
+//        } else if (key == KeyEvent.VK_SPACE) {
+//            isShooting = false;
         }
 
     }
@@ -225,34 +238,37 @@ public class Game extends Canvas implements Runnable {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_RIGHT) {
+        if (key == KeyEvent.VK_D) {
             player.setVelX(5);
-        } else if (key == KeyEvent.VK_LEFT) {
+        } else if (key == KeyEvent.VK_A) {
             player.setVelX(-5);
-        } else if (key == KeyEvent.VK_DOWN) {
+        } else if (key == KeyEvent.VK_S) {
             player.setVelY(5);
-        } else if (key == KeyEvent.VK_UP) {
+        } else if (key == KeyEvent.VK_D) {
             player.setVelY(-5);
-        } else if (key == KeyEvent.VK_SPACE && !isShooting) {
+        } else if (key == KeyEvent.VK_ENTER && !isShooting) {
             isShooting = true;
-            c.addEntity(new Bullet(player.getX(), player.getY(), tex));
-        } else if (key == KeyEvent.VK_Q) {
+            c.addEntity(new Bullet(player.getX(), player.getY(), tex, this));
+        }
+
+        if (key == KeyEvent.VK_Q) {
             System.out.println("\nExiting...");
             System.exit(1);
         }
 
-        if (key == KeyEvent.VK_D) {
+        if (key == KeyEvent.VK_L) {
             enemy.setVelX(5);
-        } else if (key == KeyEvent.VK_A) {
+        } else if (key == KeyEvent.VK_J) {
             enemy.setVelX(-5);
-        } else if (key == KeyEvent.VK_S) {
+        } else if (key == KeyEvent.VK_K) {
             enemy.setVelY(5);
-        } else if (key == KeyEvent.VK_W) {
+        } else if (key == KeyEvent.VK_I) {
             enemy.setVelY(-5);
-        } else if (key == KeyEvent.VK_ENTER && !isShooting) {
-            isShooting = true;
-            c.addEntity(new Bullet(enemy.getX(), enemy.getY(), tex));
+//        } else if (key == KeyEvent.VK_SPACE && !isShooting) {
+//            isShooting = true;
+//            c.addEntity(new Bullet(enemy.getX(), enemy.getY(), tex));
         }
+
     }
 
 } // end class Game
