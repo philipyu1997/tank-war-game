@@ -2,6 +2,8 @@ package com.game.src.main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Philip Yu
@@ -17,6 +19,8 @@ public class Game extends Canvas implements Runnable {
     // THREADING
     private boolean running = false;
     private Thread thread;
+
+    private BufferedImage image = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 
     private synchronized void start() {
 
@@ -91,6 +95,22 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void render() {
+
+        BufferStrategy bs = this.getBufferStrategy();
+
+        if (bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
+
+        Graphics g = bs.getDrawGraphics();
+        //////////////////////////////////
+
+        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+
+        //////////////////////////////////
+        g.dispose();
+        bs.show();
 
     }
 
