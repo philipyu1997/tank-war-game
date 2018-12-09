@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * @author Philip Yu
  */
-public class Player {
+public class Player implements Entity {
 
     private double x;
     private double y;

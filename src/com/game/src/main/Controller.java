@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class Controller {
 
-    private List<Bullet> bulletList = new LinkedList<>();
+    private List<Entity> entityList = new LinkedList<>();
 
-    private Bullet tempBullet;
+    private Entity entity;
 
     private Game game;
 
@@ -23,36 +23,36 @@ public class Controller {
 
     public void tick() {
 
-        for (int i = 0; i < bulletList.size(); ++i) {
-            tempBullet = bulletList.get(i);
+        for (int i = 0; i < entityList.size(); ++i) {
+            entity = entityList.get(i);
 
-            if (tempBullet.getY() < 0) {
-                removeBullet(tempBullet);
+            if (entity.getY() < 0) {
+                removeEntity(entity);
             }
 
-            tempBullet.tick();
+            entity.tick();
         }
 
     }
 
     public void render(Graphics g) {
 
-        for (int i = 0; i < bulletList.size(); ++i) {
-            tempBullet = bulletList.get(i);
-            tempBullet.render(g);
+        for (int i = 0; i < entityList.size(); ++i) {
+            entity = entityList.get(i);
+            entity.render(g);
         }
 
     }
 
-    public void addBullet(Bullet block) {
+    public void addEntity(Entity block) {
 
-        bulletList.add(block);
+        entityList.add(block);
 
     }
 
-    public void removeBullet(Bullet block) {
+    public void removeEntity(Entity block) {
 
-        bulletList.remove(block);
+        entityList.remove(block);
 
     }
 

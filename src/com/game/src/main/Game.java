@@ -25,9 +25,10 @@ public class Game extends Canvas implements Runnable {
     private boolean isShooting = false;
 
     // OBJECTS
-    private Player p;
+    private Player player;
     private Controller c;
     private Textures tex;
+    private Enemy enemy;
 
     public static void main(String[] args) {
 
@@ -121,7 +122,8 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
 
-        p.tick();
+        player.tick();
+        enemy.tick();
         c.tick();
 
     }
@@ -146,7 +148,8 @@ public class Game extends Canvas implements Runnable {
 
         addKeyListener(new KeyInput(this));
 
-        p = new Player(200, 200, tex);
+        player = new Player(200, 200, tex);
+        enemy = new Enemy(300, 200, tex);
         c = new Controller(this);
 
     }
@@ -156,14 +159,26 @@ public class Game extends Canvas implements Runnable {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_RIGHT) {
-            p.setVelX(0);
+            player.setVelX(0);
         } else if (key == KeyEvent.VK_LEFT) {
-            p.setVelX(0);
+            player.setVelX(0);
         } else if (key == KeyEvent.VK_DOWN) {
-            p.setVelY(0);
+            player.setVelY(0);
         } else if (key == KeyEvent.VK_UP) {
-            p.setVelY(0);
+            player.setVelY(0);
         } else if (key == KeyEvent.VK_SPACE) {
+            isShooting = false;
+        }
+
+        if (key == KeyEvent.VK_D) {
+            enemy.setVelX(0);
+        } else if (key == KeyEvent.VK_A) {
+            enemy.setVelX(0);
+        } else if (key == KeyEvent.VK_S) {
+            enemy.setVelY(0);
+        } else if (key == KeyEvent.VK_W) {
+            enemy.setVelY(0);
+        } else if (key == KeyEvent.VK_ENTER) {
             isShooting = false;
         }
 
@@ -195,7 +210,8 @@ public class Game extends Canvas implements Runnable {
             }
         }
 
-        p.render(g);
+        player.render(g);
+        enemy.render(g);
         c.render(g);
 
         //////////////////////////////////
@@ -210,21 +226,33 @@ public class Game extends Canvas implements Runnable {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_RIGHT) {
-            p.setVelX(5);
+            player.setVelX(5);
         } else if (key == KeyEvent.VK_LEFT) {
-            p.setVelX(-5);
+            player.setVelX(-5);
         } else if (key == KeyEvent.VK_DOWN) {
-            p.setVelY(5);
+            player.setVelY(5);
         } else if (key == KeyEvent.VK_UP) {
-            p.setVelY(-5);
+            player.setVelY(-5);
         } else if (key == KeyEvent.VK_SPACE && !isShooting) {
             isShooting = true;
-            c.addBullet(new Bullet(p.getX(), p.getY(), tex));
+            c.addEntity(new Bullet(player.getX(), player.getY(), tex));
         } else if (key == KeyEvent.VK_Q) {
             System.out.println("\nExiting...");
             System.exit(1);
         }
 
+        if (key == KeyEvent.VK_D) {
+            enemy.setVelX(5);
+        } else if (key == KeyEvent.VK_A) {
+            enemy.setVelX(-5);
+        } else if (key == KeyEvent.VK_S) {
+            enemy.setVelY(5);
+        } else if (key == KeyEvent.VK_W) {
+            enemy.setVelY(-5);
+        } else if (key == KeyEvent.VK_ENTER && !isShooting) {
+            isShooting = true;
+            c.addEntity(new Bullet(enemy.getX(), enemy.getY(), tex));
+        }
     }
 
 } // end class Game
