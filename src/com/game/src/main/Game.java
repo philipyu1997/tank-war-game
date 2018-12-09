@@ -20,24 +20,24 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
     private Thread thread;
 
-    private BufferedImage image = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage world = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
     private BufferedImage spriteSheet = null;
+    private BufferedImage image = null;
 
-    //temp
-    private BufferedImage player;
+    private Player p;
 
     private void init() {
 
         BufferedImageLoader loader = new BufferedImageLoader();
 
         try {
-            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+//            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+            image = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        SpriteSheet ss = new SpriteSheet(spriteSheet);
-        player = ss.grabImage(1, 1, 64, 64);
+        p = new Player(200, 200, this);
 
     }
 
@@ -113,6 +113,8 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
 
+        p.tick();
+
     }
 
     private void render() {
@@ -127,13 +129,14 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         //////////////////////////////////
 
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
 
-        g.drawImage(player, 100, 100, this);
+        p.render(g);
 
         //////////////////////////////////
         g.dispose();
         bs.show();
+
 
     }
 
@@ -154,6 +157,18 @@ public class Game extends Canvas implements Runnable {
         frame.setVisible(true);
 
         game.start();
+
+    }
+
+    public BufferedImage getSpriteSheet() {
+
+        return spriteSheet;
+
+    }
+
+    public BufferedImage getImage() {
+
+        return image;
 
     }
 
