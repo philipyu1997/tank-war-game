@@ -2,6 +2,7 @@ package com.game.src.main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
@@ -28,14 +29,18 @@ public class Game extends Canvas implements Runnable {
 
     private void init() {
 
+        requestFocus();
+
         BufferedImageLoader loader = new BufferedImageLoader();
 
         try {
-//            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
-            image = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
+            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+//            image = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        addKeyListener(new KeyInput(this));
 
         p = new Player(200, 200, this);
 
@@ -137,6 +142,41 @@ public class Game extends Canvas implements Runnable {
         g.dispose();
         bs.show();
 
+
+    }
+
+    public void keyPressed(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_RIGHT) {
+            p.setVelX(5);
+        } else if (key == KeyEvent.VK_LEFT) {
+            p.setVelX(-5);
+        } else if (key == KeyEvent.VK_DOWN) {
+            p.setVelY(5);
+        } else if (key == KeyEvent.VK_UP) {
+            p.setVelY(-5);
+        } else if (key == KeyEvent.VK_ESCAPE) {
+            System.out.println("\nExiting...");
+            System.exit(1);
+        }
+
+    }
+
+    public void keyReleased(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_RIGHT) {
+            p.setVelX(0);
+        } else if (key == KeyEvent.VK_LEFT) {
+            p.setVelX(0);
+        } else if (key == KeyEvent.VK_DOWN) {
+            p.setVelY(0);
+        } else if (key == KeyEvent.VK_UP) {
+            p.setVelY(0);
+        }
 
     }
 
