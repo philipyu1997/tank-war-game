@@ -20,7 +20,7 @@ public class Player {
         this.x = x;
         this.y = y;
 
-        SpriteSheet ss = new SpriteSheet(game.getSpriteSheet());
+        SpriteSheet ss = new SpriteSheet(game.getPlayerImage());
 //        ImageLoader il = new ImageLoader(game.getImage());
 
         player = ss.grabImage64(1, 4, 64, 64);

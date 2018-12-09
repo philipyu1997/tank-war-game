@@ -11,21 +11,24 @@ import java.awt.image.BufferedImage;
  */
 public class Game extends Canvas implements Runnable {
 
+    // THREADING
+    private boolean running = false;
+    private Thread thread;
+
     // CONSTANTS
     private static final int SCREEN_WIDTH = 320;
     private static final int SCREEN_HEIGHT = SCREEN_WIDTH / 12 * 9;
     private static final int SCREEN_SCALE = 2;
     private final String TITLE = "Game";
 
-    // THREADING
-    private boolean running = false;
-    private Thread thread;
-
+    // VARIABLES
     private BufferedImage world = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
-    private BufferedImage spriteSheet = null;
+    private BufferedImage player = null, bullet = null;
     private BufferedImage image = null;
 
+    // OBJECTS
     private Player p;
+    private Controller c;
 
     private void init() {
 
@@ -34,7 +37,8 @@ public class Game extends Canvas implements Runnable {
         BufferedImageLoader loader = new BufferedImageLoader();
 
         try {
-            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+            player = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+            bullet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Shell.png");
 //            image = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +47,7 @@ public class Game extends Canvas implements Runnable {
         addKeyListener(new KeyInput(this));
 
         p = new Player(200, 200, this);
+        c = new Controller(this);
 
     }
 
@@ -119,6 +124,7 @@ public class Game extends Canvas implements Runnable {
     private void tick() {
 
         p.tick();
+        c.tick();
 
     }
 
@@ -137,6 +143,7 @@ public class Game extends Canvas implements Runnable {
         g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
 
         p.render(g);
+        c.render(g);
 
         //////////////////////////////////
         g.dispose();
@@ -157,6 +164,8 @@ public class Game extends Canvas implements Runnable {
             p.setVelY(5);
         } else if (key == KeyEvent.VK_UP) {
             p.setVelY(-5);
+        } else if (key == KeyEvent.VK_SPACE) {
+            c.addBullet(new Bullet(p.getX(), p.getY(), this));
         } else if (key == KeyEvent.VK_Q) {
             System.out.println("\nExiting...");
             System.exit(1);
@@ -200,9 +209,15 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    public BufferedImage getSpriteSheet() {
+    public BufferedImage getPlayerImage() {
 
-        return spriteSheet;
+        return player;
+
+    }
+
+    public BufferedImage getBulletImage() {
+
+        return bullet;
 
     }
 
