@@ -1,15 +1,17 @@
-package com.game.src.main;
+package com.game.src.main.classes;
 
 import java.awt.*;
 
 /**
  * @author Philip Yu
  */
-public interface Entity {
+public interface EntityA {
 
     void tick();
 
     void render(Graphics g);
+
+    Rectangle getBounds();
 
     double getX();
 

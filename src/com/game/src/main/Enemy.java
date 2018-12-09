@@ -1,6 +1,6 @@
 package com.game.src.main;
 
-import com.game.src.classes.EntityB;
+import com.game.src.main.classes.EntityB;
 
 import java.awt.*;
 

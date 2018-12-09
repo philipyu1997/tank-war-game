@@ -1,11 +1,11 @@
-package com.game.src.classes;
+package com.game.src.main.classes;
 
 import java.awt.*;
 
 /**
  * @author Philip Yu
  */
-public interface EntityA {
+public interface EntityB {
 
     void tick();
 

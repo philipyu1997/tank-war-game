@@ -1,7 +1,7 @@
 package com.game.src.main;
 
-import com.game.src.classes.EntityA;
-import com.game.src.classes.EntityB;
+import com.game.src.main.classes.EntityA;
+import com.game.src.main.classes.EntityB;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +33,7 @@ public class Game extends Canvas implements Runnable {
     private Controller c;
     private Textures tex;
     private Enemy enemy;
+    private Pickup pickup;
 
     public LinkedList<EntityA> entityListA;
     public LinkedList<EntityB> entityListB;
@@ -133,6 +134,7 @@ public class Game extends Canvas implements Runnable {
         player.tick();
         enemy.tick();
         c.tick();
+        pickup.tick();
 
     }
 
@@ -165,6 +167,8 @@ public class Game extends Canvas implements Runnable {
 
         entityListB.add(enemy);
 
+        pickup = new Pickup(100, 100, tex);
+
     }
 
     public void keyReleased(KeyEvent e) {
@@ -177,7 +181,7 @@ public class Game extends Canvas implements Runnable {
             player.setVelX(0);
         } else if (key == KeyEvent.VK_S) {
             player.setVelY(0);
-        } else if (key == KeyEvent.VK_D) {
+        } else if (key == KeyEvent.VK_W) {
             player.setVelY(0);
         } else if (key == KeyEvent.VK_ENTER) {
             isShooting = false;
@@ -226,6 +230,7 @@ public class Game extends Canvas implements Runnable {
         player.render(g);
         enemy.render(g);
         c.render(g);
+        pickup.render(g);
 
         //////////////////////////////////
         g.dispose();
@@ -244,7 +249,7 @@ public class Game extends Canvas implements Runnable {
             player.setVelX(-5);
         } else if (key == KeyEvent.VK_S) {
             player.setVelY(5);
-        } else if (key == KeyEvent.VK_D) {
+        } else if (key == KeyEvent.VK_W) {
             player.setVelY(-5);
         } else if (key == KeyEvent.VK_ENTER && !isShooting) {
             isShooting = true;
