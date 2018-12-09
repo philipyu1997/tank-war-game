@@ -1,25 +1,22 @@
 package com.game.src.main;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * @author Philip Yu
  */
 public class Bullet {
 
-    BufferedImage image;
     private double x;
     private double y;
 
-    public Bullet(double x, double y, Game game) {
+    private Textures tex;
+
+    public Bullet(double x, double y, Textures tex) {
 
         this.x = x;
         this.y = y;
-
-        SpriteSheet ss = new SpriteSheet(game.getBulletImage());
-
-        image = ss.grabImage24(1, 4, 24, 24);
+        this.tex = tex;
 
     }
 
@@ -31,7 +28,7 @@ public class Bullet {
 
     public void render(Graphics g) {
 
-        g.drawImage(image, (int) x, (int) y, null);
+        g.drawImage(tex.bullet, (int) x, (int) y, null);
 
     }
 

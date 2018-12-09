@@ -22,13 +22,12 @@ public class Game extends Canvas implements Runnable {
 
     // VARIABLES
     private BufferedImage world = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
-    private BufferedImage player = null, bullet = null, background = null;
-    private BufferedImage image = null;
     private boolean isShooting = false;
 
     // OBJECTS
     private Player p;
     private Controller c;
+    private Textures tex;
 
     public static void main(String[] args) {
 
@@ -127,25 +126,46 @@ public class Game extends Canvas implements Runnable {
 
     }
 
+    public static int getScreenWidth() {
+
+        return SCREEN_WIDTH;
+
+    }
+
+    public static int getScreenHeight() {
+
+        return SCREEN_HEIGHT;
+
+    }
+
     private void init() {
 
         requestFocus();
 
-        BufferedImageLoader loader = new BufferedImageLoader();
-
-        try {
-            player = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
-            bullet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Shell.png");
-            background = loader.loadImage("src/assets/images/bmp/Background.bmp");
-//            image = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        tex = new Textures();
 
         addKeyListener(new KeyInput(this));
 
-        p = new Player(200, 200, this);
+        p = new Player(200, 200, tex);
         c = new Controller(this);
+
+    }
+
+    public void keyReleased(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_RIGHT) {
+            p.setVelX(0);
+        } else if (key == KeyEvent.VK_LEFT) {
+            p.setVelX(0);
+        } else if (key == KeyEvent.VK_DOWN) {
+            p.setVelY(0);
+        } else if (key == KeyEvent.VK_UP) {
+            p.setVelY(0);
+        } else if (key == KeyEvent.VK_SPACE) {
+            isShooting = false;
+        }
 
     }
 
@@ -163,18 +183,15 @@ public class Game extends Canvas implements Runnable {
 
         g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
 
-        int bgWidth = background.getWidth();
-        int bgHeight = background.getHeight();
+        int bgWidth = tex.background.getWidth();
+        int bgHeight = tex.background.getHeight();
 
         int fillBgX = SCREEN_WIDTH / bgWidth;
         int fillBgY = SCREEN_HEIGHT / bgHeight;
 
-        /**
-         * Apply background image to map
-         */
         for (int col = 0; col <= fillBgY; ++col) {
             for (int row = 0; row <= fillBgX; ++row) {
-                g.drawImage(background, row * bgWidth, col * bgHeight, bgWidth, bgHeight, null);
+                g.drawImage(tex.background, row * bgWidth, col * bgHeight, bgWidth, bgHeight, null);
             }
         }
 
@@ -202,47 +219,11 @@ public class Game extends Canvas implements Runnable {
             p.setVelY(-5);
         } else if (key == KeyEvent.VK_SPACE && !isShooting) {
             isShooting = true;
-            c.addBullet(new Bullet(p.getX(), p.getY(), this));
+            c.addBullet(new Bullet(p.getX(), p.getY(), tex));
         } else if (key == KeyEvent.VK_Q) {
             System.out.println("\nExiting...");
             System.exit(1);
         }
-
-    }
-
-    public void keyReleased(KeyEvent e) {
-
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_RIGHT) {
-            p.setVelX(0);
-        } else if (key == KeyEvent.VK_LEFT) {
-            p.setVelX(0);
-        } else if (key == KeyEvent.VK_DOWN) {
-            p.setVelY(0);
-        } else if (key == KeyEvent.VK_UP) {
-            p.setVelY(0);
-        } else if (key == KeyEvent.VK_SPACE) {
-            isShooting = false;
-        }
-
-    }
-
-    public BufferedImage getPlayerImage() {
-
-        return player;
-
-    }
-
-    public BufferedImage getBulletImage() {
-
-        return bullet;
-
-    }
-
-    public BufferedImage getImage() {
-
-        return image;
 
     }
 

@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * @author Philip Yu
  */
-public class Player {
+public class Enemy {
 
     private double x;
     private double y;
@@ -14,7 +14,7 @@ public class Player {
 
     private Textures tex;
 
-    public Player(double x, double y, Textures tex) {
+    public Enemy(double x, double y, Textures tex) {
 
         this.x = x;
         this.y = y;
@@ -32,22 +32,22 @@ public class Player {
             x = 0;
 
         // RIGHT
-        if (x >= Game.getScreenWidth() - tex.player.getWidth())
-            x = Game.getScreenWidth() - tex.player.getWidth();
+        if (x >= 640 - tex.enemy.getWidth())
+            x = 640 - tex.enemy.getWidth();
 
         // TOP
         if (y < 0)
             y = 0;
 
         // BOTTOM
-        if (y >= Game.getScreenHeight() - tex.player.getHeight())
-            y = Game.getScreenHeight() - tex.player.getHeight();
+        if (y >= 480 - tex.enemy.getHeight() - 16)
+            y = 480 - tex.enemy.getHeight() - 16;
 
     }
 
     public void render(Graphics g) {
 
-        g.drawImage(tex.player, (int) x, (int) y, null);
+        g.drawImage(tex.enemy, (int) x, (int) y, null);
 
     }
 
