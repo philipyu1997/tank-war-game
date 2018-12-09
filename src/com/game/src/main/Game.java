@@ -21,6 +21,25 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
 
     private BufferedImage image = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage spriteSheet = null;
+
+    //temp
+    private BufferedImage player;
+
+    private void init() {
+
+        BufferedImageLoader loader = new BufferedImageLoader();
+
+        try {
+            spriteSheet = loader.loadImage("src/assets/images/png/spritesheet/transparent/Tank1.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SpriteSheet ss = new SpriteSheet(spriteSheet);
+        player = ss.grabImage(1, 1, 64, 64);
+
+    }
 
     private synchronized void start() {
 
@@ -52,6 +71,8 @@ public class Game extends Canvas implements Runnable {
 
     @Override
     public void run() {
+
+        init();
 
         long lastTime = System.nanoTime();
         final double amountOfTicks = 60.0;
@@ -107,6 +128,8 @@ public class Game extends Canvas implements Runnable {
         //////////////////////////////////
 
         g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+
+        g.drawImage(player, 100, 100, this);
 
         //////////////////////////////////
         g.dispose();
