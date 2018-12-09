@@ -132,7 +132,7 @@ public class Game extends Canvas implements Runnable {
     private void tick() {
 
         player.tick();
-        enemy.tick();
+//        enemy.tick();
         c.tick();
         pickup.tick();
 
@@ -160,11 +160,13 @@ public class Game extends Canvas implements Runnable {
 
         player = new Player(200, 200, tex);
         enemy = new Enemy(300, 200, tex);
+
         c = new Controller(this);
 
         entityListA = c.getEntityA();
         entityListB = c.getEntityB();
 
+        entityListA.add(player);
         entityListB.add(enemy);
 
         pickup = new Pickup(100, 100, tex);
@@ -253,7 +255,7 @@ public class Game extends Canvas implements Runnable {
             player.setVelY(-5);
         } else if (key == KeyEvent.VK_ENTER && !isShooting) {
             isShooting = true;
-            c.addEntity(new Bullet(player.getX(), player.getY(), tex, this));
+            c.addEntity(new Bullet(player.getX(), player.getY(), tex, this, c));
         }
 
         if (key == KeyEvent.VK_Q) {

@@ -26,6 +26,12 @@ public class Enemy extends GameObject implements EntityB {
         x += velX;
         y += velY;
 
+        checkBorders();
+
+    }
+
+    private void checkBorders() {
+
         // LEFT
         if (x <= 0)
             x = 0;

@@ -22,4 +22,16 @@ public class Physics {
 
     }
 
+    public static boolean checkCollision(EntityB entityB, LinkedList<EntityA> entityListA) {
+
+        for (int i = 0; i < entityListA.size(); ++i) {
+            if (entityB.getBounds().intersects(entityListA.get(i).getBounds())) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
 } // end class Physics

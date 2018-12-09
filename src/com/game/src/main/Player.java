@@ -26,6 +26,12 @@ public class Player extends GameObject implements EntityA {
         x += velX;
         y += velY;
 
+        checkBorders();
+
+    }
+
+    private void checkBorders() {
+
         // LEFT
         if (x <= 0)
             x = 0;

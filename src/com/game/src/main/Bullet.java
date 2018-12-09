@@ -11,12 +11,14 @@ public class Bullet extends GameObject implements EntityA {
 
     private Textures tex;
     private Game game;
+    private Controller c;
 
-    public Bullet(double x, double y, Textures tex, Game game) {
+    public Bullet(double x, double y, Textures tex, Game game, Controller c) {
 
         super(x, y);
         this.tex = tex;
         this.game = game;
+        this.c = c;
 
     }
 
@@ -24,8 +26,16 @@ public class Bullet extends GameObject implements EntityA {
 
         y -= 10;
 
+        checkCollision();
+
+    }
+
+    private void checkCollision() {
+
         if (Physics.checkCollision(this, game.entityListB)) {
             System.out.println("Collision Detected!");
+            c.removeEntity(this);
+            System.out.println("Bullet Removed...");
         }
 
     }
