@@ -7,9 +7,9 @@ import java.awt.*;
  */
 public class Menu {
 
-    public Rectangle playButton = new Rectangle(Game.getScreenWidth() / 2 - 50, 150, 100, 50);
-    public Rectangle helpButton = new Rectangle(Game.getScreenWidth() / 2 - 50, 250, 100, 50);
-    public Rectangle quitButton = new Rectangle(Game.getScreenWidth() / 2 - 50, 350, 100, 50);
+    public Rectangle playButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 150, 120, 50);
+    public Rectangle helpButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 250, 120, 50);
+    public Rectangle quitButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 350, 120, 50);
     Graphics2D g2d;
     Textures tex = new Textures();
 
@@ -29,11 +29,23 @@ public class Menu {
         // DRAW OPTIONS
         Font fnt1 = new Font("arial", Font.BOLD, 30);
         g.setFont(fnt1);
-        printSimpleString("Play", 50, playButton.x + 50, playButton.y + 35);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(playButton.x, playButton.y, 120, 50);
+        g.setColor(Color.WHITE);
+        printSimpleString("1. Play", 50, playButton.x + 60, playButton.y + 35);
         g2d.draw(playButton);
-        printSimpleString("Help", 50, helpButton.x + 50, helpButton.y + 35);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(helpButton.x, helpButton.y, 120, 50);
+        g.setColor(Color.WHITE);
+        printSimpleString("2. Help", 50, helpButton.x + 60, helpButton.y + 35);
         g2d.draw(helpButton);
-        printSimpleString("Quit", 50, quitButton.x + 50, quitButton.y + 35);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(quitButton.x, quitButton.y, 120, 50);
+        g.setColor(Color.WHITE);
+        printSimpleString("3. Quit", 50, quitButton.x + 60, quitButton.y + 35);
         g2d.draw(quitButton);
 
     }
