@@ -31,7 +31,7 @@ public class MouseInput implements MouseListener {
         if (mouseX >= Game.getScreenWidth() / 2 - 50 && mouseX <= Game.getScreenWidth() / 2 + 50) {
             if (mouseY >= 250 && mouseY <= 300) {
                 // Pressed Help Button
-                System.out.println("\nHelp Button Pressed!");
+                System.out.println("\nMouse Input: Help Button Pressed!");
             }
         }
 
@@ -39,7 +39,7 @@ public class MouseInput implements MouseListener {
         if (mouseX >= Game.getScreenWidth() / 2 - 50 && mouseX <= Game.getScreenWidth() / 2 + 50) {
             if (mouseY >= 350 && mouseY <= 400) {
                 // Pressed Quit Button
-                System.out.println("\nQuit Button Pressed...");
+                System.out.println("\nMouse Input: Quit Button Pressed...");
                 System.out.println("Exiting Game...");
                 System.exit(1);
             }
