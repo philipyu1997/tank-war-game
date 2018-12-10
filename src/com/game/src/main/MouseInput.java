@@ -1,5 +1,7 @@
 package com.game.src.main;
 
+import window.Game;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 

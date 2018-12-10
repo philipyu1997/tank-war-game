@@ -1,10 +1,11 @@
-package com.game.src.main;
+package window;
 
+import com.game.src.main.Menu;
+import com.game.src.main.*;
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
 import com.game.src.main.classes.EntityC;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
@@ -21,9 +22,10 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
 
     // CONSTANTS
+    private static final long serialVersionUID = 6435385428141935074L;
     private static final int SCREEN_WIDTH = 800;
     private static final int SCREEN_HEIGHT = 600;
-    private final String TITLE = "Game";
+    private static final String TITLE = "Game";
 
     // VARIABLES
     private BufferedImage world = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -40,7 +42,7 @@ public class Game extends Canvas implements Runnable {
     public LinkedList<EntityA> entityListA;
     public LinkedList<EntityB> entityListB;
     public LinkedList<EntityC> entityListC;
-    private Menu menu;
+    private com.game.src.main.Menu menu;
 
     private void tick() {
 
@@ -55,25 +57,11 @@ public class Game extends Canvas implements Runnable {
 
     public static void main(String[] args) {
 
-        Game game = new Game();
-
-        game.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        game.setMaximumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        game.setMinimumSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-
-        JFrame frame = new JFrame(game.TITLE);
-        frame.add(game);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        game.start();
+        new Window(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE, new Game());
 
     }
 
-    private synchronized void start() {
+    protected synchronized void start() {
 
         if (running)
             return;
@@ -84,7 +72,7 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    private synchronized void stop() {
+    protected synchronized void stop() {
 
         if (!running)
             return;
@@ -154,8 +142,8 @@ public class Game extends Canvas implements Runnable {
 
         c = new Controller(this);
 
-        player = new Player(200, 200, tex, this, c, 200);
-        enemy = new Enemy(300, 200, tex, this, c, 200);
+        player = new Player(200, 200, tex, this, c, 100);
+        enemy = new Enemy(300, 200, tex, this, c, 100);
 
         menu = new Menu();
 
@@ -216,9 +204,10 @@ public class Game extends Canvas implements Runnable {
 
             if (player.getHealth() > 0) {
                 g.setColor(Color.GREEN);
-                g.fillRect(5, 5, player.getHealth(), 50);
+                g.fillRect(5, 5, player.getHealth() * 2, 50);
             } else if (player.getHealth() <= 0) {
                 g.setColor(Color.RED);
+                State = STATE.END;
             }
 
             g.drawString("Player Health: " + player.getHealth(), 5, 75);
@@ -232,9 +221,10 @@ public class Game extends Canvas implements Runnable {
 
             if (enemy.getHealth() > 0) {
                 g.setColor(Color.GREEN);
-                g.fillRect(SCREEN_WIDTH - 205, 5, enemy.getHealth(), 50);
+                g.fillRect(SCREEN_WIDTH - 205, 5, enemy.getHealth() * 2, 50);
             } else if (enemy.getHealth() <= 0) {
                 g.setColor(Color.BLUE);
+                State = STATE.END;
             }
 
             g.drawString("Enemy Health: " + enemy.getHealth(), SCREEN_WIDTH - 205, 75);
@@ -248,6 +238,10 @@ public class Game extends Canvas implements Runnable {
             pickup.render(g);
 
         } else if (State == STATE.MENU) {
+
+            menu.render(g);
+
+        } else if (State == STATE.END) {
 
             menu.render(g);
 
@@ -346,6 +340,7 @@ public class Game extends Canvas implements Runnable {
     public enum STATE {
 
         MENU,
+        END,
         GAME
 
     }

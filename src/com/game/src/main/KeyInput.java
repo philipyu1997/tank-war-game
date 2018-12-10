@@ -1,5 +1,7 @@
 package com.game.src.main;
 
+import window.Game;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 

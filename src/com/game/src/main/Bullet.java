@@ -3,6 +3,7 @@ package com.game.src.main;
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
 import com.game.src.main.classes.EntityC;
+import window.Game;
 
 import java.awt.*;
 
@@ -14,6 +15,7 @@ public class Bullet extends GameObject implements EntityC {
     private Textures tex;
     private Game game;
     private Controller c;
+    private static int shellDamage = 10;
 
     public Bullet(double x, double y, Textures tex, Game game, Controller c) {
 
@@ -91,6 +93,12 @@ public class Bullet extends GameObject implements EntityC {
     public void setY(double y) {
 
         this.y = y;
+
+    }
+
+    public static int getShellDamage() {
+
+        return shellDamage;
 
     }
 

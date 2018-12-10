@@ -3,6 +3,7 @@ package com.game.src.main;
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
 import com.game.src.main.classes.EntityC;
+import window.Game;
 
 import java.awt.*;
 import java.util.LinkedList;

@@ -2,6 +2,7 @@ package com.game.src.main;
 
 import com.game.src.main.classes.EntityB;
 import com.game.src.main.classes.EntityC;
+import window.Game;
 
 import java.awt.*;
 
@@ -46,7 +47,7 @@ public class Enemy extends GameObject implements EntityB {
 
             if (Physics.checkCollision(entityC, this)) {
                 c.removeEntity(entityC);
-                health -= 10;
+                health -= Bullet.getShellDamage();
 
                 if (health == 0)
                     c.removeEntity(this);
