@@ -1,4 +1,4 @@
-package com.game.src.main;
+package framework;
 
 import java.awt.image.BufferedImage;
 

@@ -1,8 +1,8 @@
-package com.game.src.main;
+package window;
 
-import com.game.src.main.classes.EntityA;
-import com.game.src.main.classes.EntityB;
-import com.game.src.main.classes.EntityC;
+import framework.EntityA;
+import framework.EntityB;
+import framework.EntityC;
 
 /**
  * @author Philip Yu

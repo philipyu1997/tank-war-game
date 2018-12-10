@@ -1,15 +1,16 @@
 package window;
 
-import com.game.src.main.Menu;
-import com.game.src.main.*;
-import com.game.src.main.classes.EntityA;
-import com.game.src.main.classes.EntityB;
-import com.game.src.main.classes.EntityC;
+import framework.*;
+import objects.Explosion;
+import objects.HealthBar;
+import objects.Pickup;
+import objects.Player;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -23,41 +24,45 @@ public class Game extends Canvas implements Runnable {
 
     // CONSTANTS
     private static final long serialVersionUID = 6435385428141935074L;
-    private static final int SCREEN_WIDTH = 800;
-    private static final int SCREEN_HEIGHT = 600;
+    private static final int GAME_WIDTH = 1280;
+    private static final int GAME_HEIGHT = 1280;
+    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_HEIGHT = 600;
+    private static final int TANK1_ORIGIN_X = 200, TANK1_ORIGIN_Y = 192,
+            TANK2_ORIGIN_X = (GAME_WIDTH - TANK1_ORIGIN_X - 64),
+            TANK2_ORIGIN_Y = (GAME_HEIGHT - TANK1_ORIGIN_Y - 64 - 1);
     private static final String TITLE = "Game";
-
-    // VARIABLES
-    private BufferedImage world = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
-    private boolean isShooting = false;
-
     // OBJECTS
-    private Player player;
-    private Controller c;
-    private Textures tex;
-    private Enemy enemy;
+    public static GameState State = GameState.MENU;
+    private static Texture tex;
+    //VARIABLES
+    private int spaceX = 15;
+    private int spaceY = 105;
+    private Handler handler;
+    private HealthBar health;
     private Pickup pickup;
-    public static STATE State = STATE.MENU;
+    private Explosion explosion;
+    private Player p1, p2;
+    private Camera c1, c2;
+    private Map map;
+    private Menu menu;
 
+    private BufferedImage world = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage leftScreen, rightScreen;
+    private BufferedImage background;
     public LinkedList<EntityA> entityListA;
     public LinkedList<EntityB> entityListB;
     public LinkedList<EntityC> entityListC;
-    private com.game.src.main.Menu menu;
-
-    private void tick() {
-
-        if (State == STATE.GAME) {
-//            player.tick();
-//            enemy.tick();
-            c.tick();
-            pickup.tick();
-        }
-
-    }
 
     public static void main(String[] args) {
 
-        new Window(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE, new Game());
+        new Window(WINDOW_WIDTH, WINDOW_HEIGHT, TITLE, new Game());
+
+    }
+
+    public static Texture getInstance() {
+
+        return tex;
 
     }
 
@@ -131,42 +136,77 @@ public class Game extends Canvas implements Runnable {
 
     }
 
+    public static int getGameWidth() {
+
+        return GAME_WIDTH;
+
+    }
+
+    public static int getGameHeight() {
+
+        return GAME_HEIGHT;
+
+    }
+
+    public static int getWindowWidth() {
+
+        return WINDOW_WIDTH;
+
+    }
+
+    public static int getWindowHeight() {
+
+        return WINDOW_HEIGHT;
+
+    }
+
+    private void tick() {
+
+        if (State == GameState.GAME) {
+            handler.tick();
+            c1.tick(p1);
+        }
+
+    }
+
     private void init() {
 
         requestFocus();
 
-        tex = new Textures();
+        tex = new Texture();
 
-        addKeyListener(new KeyInput(this));
-        addMouseListener(new MouseInput());
+        background = tex.background;
 
-        c = new Controller(this);
+        handler = new Handler(this);
+        map = new Map(handler);
 
-        player = new Player(200, 200, tex, this, c, 100);
-        enemy = new Enemy(300, 200, tex, this, c, 100);
+        c1 = new Camera(0, 0);
+        c2 = new Camera(0, 0);
+
+        p1 = new Player(0, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, 100);
+        p2 = new Player(1, TANK2_ORIGIN_X, TANK2_ORIGIN_Y, 0, 0, 180, tex, this, handler, 100);
+
+        Peripheral pe1 = new Peripheral(p1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_ENTER);
+        Peripheral pe2 = new Peripheral(p2, KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, KeyEvent.VK_SPACE);
+
+        addKeyListener(pe1);
+        addKeyListener(pe2);
+        addMouseListener(pe1);
+        addMouseMotionListener(pe1);
+
+        health = new HealthBar(p1, p2);
 
         menu = new Menu();
 
-        entityListA = c.getEntityA();
-        entityListB = c.getEntityB();
-        entityListC = c.getEntityC();
+//        pickup = new Pickup(100, 100, tex);
+        explosion = new Explosion(1, 100, 100, tex);
 
-        entityListA.add(player);
-        entityListB.add(enemy);
+        handler.addObject(p1);
+        handler.addObject(p2);
+//        handler.addObject(pickup);
+        handler.addObject(explosion);
 
-        pickup = new Pickup(100, 100, tex);
-
-    }
-
-    public static int getScreenWidth() {
-
-        return SCREEN_WIDTH;
-
-    }
-
-    public static int getScreenHeight() {
-
-        return SCREEN_HEIGHT;
+        map.loadWalls2();
 
     }
 
@@ -180,70 +220,32 @@ public class Game extends Canvas implements Runnable {
         }
 
         Graphics g = bs.getDrawGraphics();
+        Graphics2D g2d = (Graphics2D) g;
         //////////////////////////////////
 
         g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
 
-        if (State == STATE.GAME) {
+        if (State == GameState.GAME) {
 
-            int bgWidth = tex.background.getWidth();
-            int bgHeight = tex.background.getHeight();
+            g2d.translate(c1.getX(), c1.getY()); // beginning of camera
 
-            int fillBgX = SCREEN_WIDTH / bgWidth;
-            int fillBgY = SCREEN_HEIGHT / bgHeight;
+            map.loadBackground(g2d);
+//            map.loadWalls(g2d);
+            handler.render(g2d);
 
-            for (int col = 0; col <= fillBgY; ++col) {
-                for (int row = 0; row <= fillBgX; ++row) {
-                    g.drawImage(tex.background, row * bgWidth, col * bgHeight, bgWidth, bgHeight, null);
-                }
-            }
+            g2d.translate(-c1.getX(), -c1.getY()); // end of camera
 
-            // PLAYER HEALTH BAR
-            g.setColor(Color.RED);
-            g.fillRect(5, 5, 200, 50);
+            health.render(g2d);
 
-            if (player.getHealth() > 0) {
-                g.setColor(Color.GREEN);
-                g.fillRect(5, 5, player.getHealth() * 2, 50);
-            } else if (player.getHealth() <= 0) {
-                g.setColor(Color.RED);
-                State = STATE.END;
-            }
+            renderForeground(g2d);
 
-            g.drawString("Player Health: " + player.getHealth(), 5, 75);
+        } else if (State == GameState.MENU) {
 
-            g.setColor(Color.WHITE);
-            g.drawRect(5, 5, 200, 50);
+            menu.render(g2d);
 
-            // ENEMY HEALTH BAR
-            g.setColor(Color.BLUE);
-            g.fillRect(SCREEN_WIDTH - 205, 5, 200, 50);
+        } else if (State == GameState.END) {
 
-            if (enemy.getHealth() > 0) {
-                g.setColor(Color.GREEN);
-                g.fillRect(SCREEN_WIDTH - 205, 5, enemy.getHealth() * 2, 50);
-            } else if (enemy.getHealth() <= 0) {
-                g.setColor(Color.BLUE);
-                State = STATE.END;
-            }
-
-            g.drawString("Enemy Health: " + enemy.getHealth(), SCREEN_WIDTH - 205, 75);
-
-            g.setColor(Color.WHITE);
-            g.drawRect(SCREEN_WIDTH - 205, 5, 200, 50);
-
-//            player.render(g);
-//            enemy.render(g);
-            c.render(g);
-            pickup.render(g);
-
-        } else if (State == STATE.MENU) {
-
-            menu.render(g);
-
-        } else if (State == STATE.END) {
-
-            menu.render(g);
+            menu.render(g2d);
 
         }
 
@@ -254,94 +256,59 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    public void keyReleased(KeyEvent e) {
+    private void renderForeground(Graphics g) {
 
-        int key = e.getKeyCode();
+        resetString();
+        drawString(g, "");
+        drawString(g, "AmountKeysPressed: " + Peripheral.getKeysPressed().size());
+        drawList(g, toStringList("KeyPressed: ", Peripheral.getKeysPressed()));
+        drawString(g, "");
+        drawString(g, "MouseX: " + Peripheral.getMouseX());
+        drawString(g, "MouseY: " + Peripheral.getMouseY());
+        drawString(g, "");
+        drawString(g, "Player1X: " + p1.getX());
+        drawString(g, "Player1Y: " + p1.getY());
+        drawString(g, "Player1Angle: " + p1.getAngle());
+        drawString(g, "Player1Rev:" + p1.getRevolutions());
+        drawString(g, "");
+        drawString(g, "Player2X: " + p2.getX());
+        drawString(g, "Player2Y: " + p2.getY());
+        drawString(g, "Player2Angle: " + p2.getAngle());
+        drawString(g, "Player2Rev:" + p2.getRevolutions());
 
-        if (key == KeyEvent.VK_D) {
-            player.setVelX(0);
-        } else if (key == KeyEvent.VK_A) {
-            player.setVelX(0);
-        } else if (key == KeyEvent.VK_S) {
-            player.setVelY(0);
-        } else if (key == KeyEvent.VK_W) {
-            player.setVelY(0);
-        } else if (key == KeyEvent.VK_ENTER) {
-            isShooting = false;
-        }
+    }
 
-        if (key == KeyEvent.VK_L) {
-            enemy.setVelX(0);
-        } else if (key == KeyEvent.VK_J) {
-            enemy.setVelX(0);
-        } else if (key == KeyEvent.VK_K) {
-            enemy.setVelY(0);
-        } else if (key == KeyEvent.VK_I) {
-            enemy.setVelY(0);
-        } else if (key == KeyEvent.VK_SPACE) {
-            isShooting = false;
+    private void resetString() {
+
+        spaceY = 105;
+
+    }
+
+    private void drawString(Graphics g, String text) {
+
+        g.setColor(Color.WHITE);
+        g.drawString(text, spaceX, spaceY);
+        spaceY += 15;
+
+    }
+
+    private void drawList(Graphics g, java.util.List<String> list) {
+
+        for (String text : list) {
+            drawString(g, text);
         }
 
     }
 
-    public void keyPressed(KeyEvent e) {
+    private java.util.List<String> toStringList(String pre, java.util.List list) {
 
-        int key = e.getKeyCode();
+        java.util.List<String> stringList = new ArrayList<>();
 
-        if (key == KeyEvent.VK_1) {
-            Game.State = Game.STATE.GAME;
-        } else if (key == KeyEvent.VK_2) {
-            System.out.println("\nKey Input: Help Button Pressed");
-        } else if (key == KeyEvent.VK_3) {
-            System.out.println("\nQuit Button Pressed...");
-            System.out.println("Exiting Game...");
-            System.exit(1);
+        for (Object object : list) {
+            stringList.add(pre + object.toString());
         }
 
-        if (State == STATE.GAME) {
-            if (key == KeyEvent.VK_D) {
-                player.setVelX(5);
-            } else if (key == KeyEvent.VK_A) {
-                player.setVelX(-5);
-            } else if (key == KeyEvent.VK_S) {
-                player.setVelY(5);
-            } else if (key == KeyEvent.VK_W) {
-                player.setVelY(-5);
-            } else if (key == KeyEvent.VK_ENTER && !isShooting) {
-                isShooting = true;
-                Bullet bullet = new Bullet(player.getX() + 32, player.getY() - 25, tex, this, c);
-                entityListC.add(bullet);
-                c.addEntity(bullet);
-            }
-
-            if (key == KeyEvent.VK_Q) {
-                System.out.println("\nExiting...");
-                System.exit(1);
-            }
-
-            if (key == KeyEvent.VK_L) {
-                enemy.setVelX(5);
-            } else if (key == KeyEvent.VK_J) {
-                enemy.setVelX(-5);
-            } else if (key == KeyEvent.VK_K) {
-                enemy.setVelY(5);
-            } else if (key == KeyEvent.VK_I) {
-                enemy.setVelY(-5);
-            } else if (key == KeyEvent.VK_SPACE && !isShooting) {
-                isShooting = true;
-                Bullet bullet = new Bullet(enemy.getX() + 32, enemy.getY() - 25, tex, this, c);
-                entityListC.add(bullet);
-                c.addEntity(bullet);
-            }
-        }
-
-    }
-
-    public enum STATE {
-
-        MENU,
-        END,
-        GAME
+        return stringList;
 
     }
 

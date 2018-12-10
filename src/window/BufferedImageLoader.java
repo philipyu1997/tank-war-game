@@ -1,4 +1,4 @@
-package com.game.src.main;
+package window;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

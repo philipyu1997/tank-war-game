@@ -1,6 +1,6 @@
-package com.game.src.main;
+package window;
 
-import window.Game;
+import framework.Texture;
 
 import java.awt.*;
 
@@ -9,11 +9,11 @@ import java.awt.*;
  */
 public class Menu {
 
-    public Rectangle playButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 150, 120, 50);
-    public Rectangle helpButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 250, 120, 50);
-    public Rectangle quitButton = new Rectangle(Game.getScreenWidth() / 2 - 60, 350, 120, 50);
+    public Rectangle playButton = new Rectangle(Game.getWindowWidth() / 2 - 60, 150, 120, 50);
+    public Rectangle helpButton = new Rectangle(Game.getWindowWidth() / 2 - 60, 250, 120, 50);
+    public Rectangle quitButton = new Rectangle(Game.getWindowWidth() / 2 - 60, 350, 120, 50);
     Graphics2D g2d;
-    Textures tex = new Textures();
+    Texture tex = new Texture();
 
     public void render(Graphics g) {
 
@@ -26,7 +26,7 @@ public class Menu {
         // DRAW TITLE
         g.setFont(fnt0);
         g.setColor(Color.WHITE);
-        printSimpleString("TANK GAME", fnt0.getSize(), Game.getScreenWidth() / 2, 100);
+        printSimpleString("TANK GAME", fnt0.getSize(), Game.getWindowWidth() / 2, 100);
 
         // DRAW OPTIONS
         Font fnt1 = new Font("arial", Font.BOLD, 30);
