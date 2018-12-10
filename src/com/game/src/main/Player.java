@@ -1,6 +1,7 @@
 package com.game.src.main;
 
 import com.game.src.main.classes.EntityA;
+import com.game.src.main.classes.EntityC;
 
 import java.awt.*;
 
@@ -13,11 +14,15 @@ public class Player extends GameObject implements EntityA {
     private double velY;
 
     private Textures tex;
+    private Game game;
+    private Controller c;
 
-    public Player(double x, double y, Textures tex) {
+    public Player(double x, double y, Textures tex, Game game, Controller c) {
 
         super(x, y);
         this.tex = tex;
+        this.game = game;
+        this.c = c;
 
     }
 
@@ -27,6 +32,23 @@ public class Player extends GameObject implements EntityA {
         y += velY;
 
         checkBorders();
+        checkCollision();
+
+    }
+
+    private void checkCollision() {
+
+        for (int i = 0; i < game.entityListC.size(); ++i) {
+            EntityC entityC = game.entityListC.get(i);
+
+            if (Physics.checkCollision(entityC, this)) {
+                c.removeEntity(entityC);
+                Game.HEALTH -= 10;
+                if (Game.HEALTH == 0) {
+                    c.removeEntity(this);
+                }
+            }
+        }
 
     }
 

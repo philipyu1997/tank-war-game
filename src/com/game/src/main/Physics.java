@@ -2,32 +2,27 @@ package com.game.src.main;
 
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
-
-import java.util.LinkedList;
+import com.game.src.main.classes.EntityC;
 
 /**
  * @author Philip Yu
  */
 public class Physics {
 
-    public static boolean checkCollision(EntityA entityA, LinkedList<EntityB> entityListB) {
+    public static boolean checkCollision(EntityC entityC, EntityB entityB) {
 
-        for (int i = 0; i < entityListB.size(); ++i) {
-            if (entityA.getBounds().intersects(entityListB.get(i).getBounds())) {
-                return true;
-            }
+        if (entityC.getBounds().intersects(entityB.getBounds())) {
+            return true;
         }
 
         return false;
 
     }
 
-    public static boolean checkCollision(EntityB entityB, LinkedList<EntityA> entityListA) {
+    public static boolean checkCollision(EntityC entityC, EntityA entityA) {
 
-        for (int i = 0; i < entityListA.size(); ++i) {
-            if (entityB.getBounds().intersects(entityListA.get(i).getBounds())) {
-                return true;
-            }
+        if (entityC.getBounds().intersects(entityA.getBounds())) {
+            return true;
         }
 
         return false;

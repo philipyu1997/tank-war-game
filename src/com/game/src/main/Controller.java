@@ -2,6 +2,7 @@ package com.game.src.main;
 
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
+import com.game.src.main.classes.EntityC;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -13,9 +14,11 @@ public class Controller {
 
     private LinkedList<EntityA> entityListA = new LinkedList<>();
     private LinkedList<EntityB> entityListB = new LinkedList<>();
+    private LinkedList<EntityC> entityListC = new LinkedList<>();
 
     private EntityA entityA;
     private EntityB entityB;
+    private EntityC entityC;
 
     private Game game;
 
@@ -49,6 +52,17 @@ public class Controller {
             entityB.tick();
         }
 
+        // CLASS C
+        for (int i = 0; i < entityListC.size(); ++i) {
+            entityC = entityListC.get(i);
+
+            if (entityC.getY() < 0) {
+                removeEntity(entityC);
+            }
+
+            entityC.tick();
+        }
+
     }
 
     public void render(Graphics g) {
@@ -63,6 +77,12 @@ public class Controller {
         for (int i = 0; i < entityListB.size(); ++i) {
             entityB = entityListB.get(i);
             entityB.render(g);
+        }
+
+        // CLASS C
+        for (int i = 0; i < entityListC.size(); ++i) {
+            entityC = entityListC.get(i);
+            entityC.render(g);
         }
 
     }
@@ -91,6 +111,18 @@ public class Controller {
 
     }
 
+    public void addEntity(EntityC block) {
+
+        entityListC.add(block);
+
+    }
+
+    public void removeEntity(EntityC block) {
+
+        entityListC.remove(block);
+
+    }
+
     public LinkedList<EntityA> getEntityA() {
 
         return entityListA;
@@ -100,6 +132,12 @@ public class Controller {
     public LinkedList<EntityB> getEntityB() {
 
         return entityListB;
+
+    }
+
+    public LinkedList<EntityC> getEntityC() {
+
+        return entityListC;
 
     }
 

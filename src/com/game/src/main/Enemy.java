@@ -1,6 +1,7 @@
 package com.game.src.main;
 
 import com.game.src.main.classes.EntityB;
+import com.game.src.main.classes.EntityC;
 
 import java.awt.*;
 
@@ -13,13 +14,15 @@ public class Enemy extends GameObject implements EntityB {
     private double velY;
 
     private Textures tex;
+    private Game game;
+    private Controller c;
 
-    private int lifeCount = 5;
-
-    public Enemy(double x, double y, Textures tex) {
+    public Enemy(double x, double y, Textures tex, Game game, Controller c) {
 
         super(x, y);
         this.tex = tex;
+        this.game = game;
+        this.c = c;
 
     }
 
@@ -29,6 +32,23 @@ public class Enemy extends GameObject implements EntityB {
         y += velY;
 
         checkBorders();
+        checkCollision();
+
+    }
+
+    private void checkCollision() {
+
+        for (int i = 0; i < game.entityListC.size(); ++i) {
+            EntityC entityC = game.entityListC.get(i);
+
+            if (Physics.checkCollision(entityC, this)) {
+                c.removeEntity(entityC);
+                Game.HEALTH -= 10;
+                if (Game.HEALTH == 0) {
+                    c.removeEntity(this);
+                }
+            }
+        }
 
     }
 
@@ -112,15 +132,4 @@ public class Enemy extends GameObject implements EntityB {
 
     }
 
-    public int getLifeCount() {
-
-        return lifeCount;
-
-    }
-
-    public void setLifeCount(int lifeCount) {
-
-        this.lifeCount = lifeCount;
-
-    }
 } // end class Player

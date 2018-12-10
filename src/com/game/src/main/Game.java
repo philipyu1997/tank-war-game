@@ -2,6 +2,7 @@ package com.game.src.main;
 
 import com.game.src.main.classes.EntityA;
 import com.game.src.main.classes.EntityB;
+import com.game.src.main.classes.EntityC;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,13 +39,15 @@ public class Game extends Canvas implements Runnable {
 
     public LinkedList<EntityA> entityListA;
     public LinkedList<EntityB> entityListB;
+    public static int HEALTH = 100 * 2;
     private Menu menu;
+    public LinkedList<EntityC> entityListC;
 
     private void tick() {
 
         if (State == STATE.GAME) {
-            player.tick();
-            enemy.tick();
+//            player.tick();
+//            enemy.tick();
             c.tick();
             pickup.tick();
         }
@@ -150,15 +153,16 @@ public class Game extends Canvas implements Runnable {
         addKeyListener(new KeyInput(this));
         addMouseListener(new MouseInput());
 
-        player = new Player(200, 200, tex);
-        enemy = new Enemy(300, 200, tex);
-
         c = new Controller(this);
+
+        player = new Player(200, 200, tex, this, c);
+        enemy = new Enemy(300, 200, tex, this, c);
 
         menu = new Menu();
 
         entityListA = c.getEntityA();
         entityListB = c.getEntityB();
+        entityListC = c.getEntityC();
 
         entityListA.add(player);
         entityListB.add(enemy);
@@ -207,8 +211,40 @@ public class Game extends Canvas implements Runnable {
                 }
             }
 
-            player.render(g);
-            enemy.render(g);
+            // HEALTH BAR
+            g.setColor(Color.RED);
+            g.fillRect(5, 5, 200, 50);
+
+            if (HEALTH > 0) {
+                g.setColor(Color.GREEN);
+                g.fillRect(5, 5, HEALTH, 50);
+            } else if (HEALTH <= 0) {
+                g.setColor(Color.RED);
+            }
+
+            g.drawString("Health: " + HEALTH, 5, 75);
+
+            g.setColor(Color.WHITE);
+            g.drawRect(5, 5, 200, 50);
+
+            // HEALTH BAR
+            g.setColor(Color.BLUE);
+            g.fillRect(SCREEN_WIDTH - 205, 5, 200, 50);
+
+            if (HEALTH > 0) {
+                g.setColor(Color.GREEN);
+                g.fillRect(SCREEN_WIDTH - 205, 5, HEALTH, 50);
+            } else if (HEALTH <= 0) {
+                g.setColor(Color.BLUE);
+            }
+
+            g.drawString("Health: " + HEALTH, SCREEN_WIDTH - 205, 75);
+
+            g.setColor(Color.WHITE);
+            g.drawRect(SCREEN_WIDTH - 205, 5, 200, 50);
+
+//            player.render(g);
+//            enemy.render(g);
             c.render(g);
             pickup.render(g);
 
@@ -249,8 +285,8 @@ public class Game extends Canvas implements Runnable {
             enemy.setVelY(0);
         } else if (key == KeyEvent.VK_I) {
             enemy.setVelY(0);
-//        } else if (key == KeyEvent.VK_SPACE) {
-//            isShooting = false;
+        } else if (key == KeyEvent.VK_SPACE) {
+            isShooting = false;
         }
 
     }
@@ -270,7 +306,9 @@ public class Game extends Canvas implements Runnable {
                 player.setVelY(-5);
             } else if (key == KeyEvent.VK_ENTER && !isShooting) {
                 isShooting = true;
-                c.addEntity(new Bullet(player.getX(), player.getY(), tex, this, c));
+                Bullet bullet = new Bullet(player.getX() + 32, player.getY() - 25, tex, this, c);
+                entityListC.add(bullet);
+                c.addEntity(bullet);
             }
 
             if (key == KeyEvent.VK_Q) {
@@ -286,15 +324,17 @@ public class Game extends Canvas implements Runnable {
                 enemy.setVelY(5);
             } else if (key == KeyEvent.VK_I) {
                 enemy.setVelY(-5);
-//        } else if (key == KeyEvent.VK_SPACE && !isShooting) {
-//            isShooting = true;
-//            c.addEntity(new Bullet(enemy.getX(), enemy.getY(), tex));
+            } else if (key == KeyEvent.VK_SPACE && !isShooting) {
+                isShooting = true;
+                Bullet bullet = new Bullet(enemy.getX() + 32, enemy.getY() - 25, tex, this, c);
+                entityListC.add(bullet);
+                c.addEntity(bullet);
             }
         }
 
     }
 
-    public static enum STATE {
+    public enum STATE {
 
         MENU,
         GAME
