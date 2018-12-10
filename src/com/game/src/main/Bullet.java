@@ -33,7 +33,7 @@ public class Bullet extends GameObject implements EntityA {
     private void checkCollision() {
 
         if (Physics.checkCollision(this, game.entityListB)) {
-            System.out.println("Collision Detected!");
+            System.out.println("\nCollision Detected!");
             c.removeEntity(this);
             System.out.println("Bullet Removed...");
         }

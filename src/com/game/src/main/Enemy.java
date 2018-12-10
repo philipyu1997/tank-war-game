@@ -14,6 +14,8 @@ public class Enemy extends GameObject implements EntityB {
 
     private Textures tex;
 
+    private int lifeCount = 5;
+
     public Enemy(double x, double y, Textures tex) {
 
         super(x, y);
@@ -110,4 +112,15 @@ public class Enemy extends GameObject implements EntityB {
 
     }
 
+    public int getLifeCount() {
+
+        return lifeCount;
+
+    }
+
+    public void setLifeCount(int lifeCount) {
+
+        this.lifeCount = lifeCount;
+
+    }
 } // end class Player

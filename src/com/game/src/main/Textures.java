@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
  */
 public class Textures {
 
-    public BufferedImage player, bullet, background, enemy;
+    public BufferedImage player, bullet, background, enemy, title;
     public BufferedImage[] obj_pickup = new BufferedImage[4];
 
     public Textures() {
@@ -21,6 +21,7 @@ public class Textures {
         BufferedImageLoader loader = new BufferedImageLoader();
 
         try {
+            title = loader.loadImage("src/assets/images/bmp/Title.png");
             player = loader.loadImage("src/assets/images/png/transparent/Tank1.png");
             bullet = loader.loadImage("src/assets/images/png/transparent/Shell.png");
             background = loader.loadImage("src/assets/images/bmp/Background.bmp");

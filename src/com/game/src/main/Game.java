@@ -34,10 +34,22 @@ public class Game extends Canvas implements Runnable {
     private Textures tex;
     private Enemy enemy;
     private Pickup pickup;
+    public static STATE State = STATE.MENU;
 
     public LinkedList<EntityA> entityListA;
     public LinkedList<EntityB> entityListB;
+    private Menu menu;
 
+    private void tick() {
+
+        if (State == STATE.GAME) {
+            player.tick();
+            enemy.tick();
+            c.tick();
+            pickup.tick();
+        }
+
+    }
 
     public static void main(String[] args) {
 
@@ -129,12 +141,29 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    private void tick() {
+    private void init() {
 
-        player.tick();
-//        enemy.tick();
-        c.tick();
-        pickup.tick();
+        requestFocus();
+
+        tex = new Textures();
+
+        addKeyListener(new KeyInput(this));
+        addMouseListener(new MouseInput());
+
+        player = new Player(200, 200, tex);
+        enemy = new Enemy(300, 200, tex);
+
+        c = new Controller(this);
+
+        menu = new Menu();
+
+        entityListA = c.getEntityA();
+        entityListB = c.getEntityB();
+
+        entityListA.add(player);
+        entityListB.add(enemy);
+
+        pickup = new Pickup(100, 100, tex);
 
     }
 
@@ -150,26 +179,49 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    private void init() {
+    private void render() {
 
-        requestFocus();
+        BufferStrategy bs = this.getBufferStrategy();
 
-        tex = new Textures();
+        if (bs == null) {
+            createBufferStrategy(3);
+            return;
+        }
 
-        addKeyListener(new KeyInput(this));
+        Graphics g = bs.getDrawGraphics();
+        //////////////////////////////////
 
-        player = new Player(200, 200, tex);
-        enemy = new Enemy(300, 200, tex);
+        g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
 
-        c = new Controller(this);
+        if (State == STATE.GAME) {
 
-        entityListA = c.getEntityA();
-        entityListB = c.getEntityB();
+            int bgWidth = tex.background.getWidth();
+            int bgHeight = tex.background.getHeight();
 
-        entityListA.add(player);
-        entityListB.add(enemy);
+            int fillBgX = SCREEN_WIDTH / bgWidth;
+            int fillBgY = SCREEN_HEIGHT / bgHeight;
 
-        pickup = new Pickup(100, 100, tex);
+            for (int col = 0; col <= fillBgY; ++col) {
+                for (int row = 0; row <= fillBgX; ++row) {
+                    g.drawImage(tex.background, row * bgWidth, col * bgHeight, bgWidth, bgHeight, null);
+                }
+            }
+
+            player.render(g);
+            enemy.render(g);
+            c.render(g);
+            pickup.render(g);
+
+        } else if (State == STATE.MENU) {
+
+            menu.render(g);
+
+        }
+
+        //////////////////////////////////
+        g.dispose();
+        bs.show();
+
 
     }
 
@@ -203,78 +255,49 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    private void render() {
-
-        BufferStrategy bs = this.getBufferStrategy();
-
-        if (bs == null) {
-            createBufferStrategy(3);
-            return;
-        }
-
-        Graphics g = bs.getDrawGraphics();
-        //////////////////////////////////
-
-        g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
-
-        int bgWidth = tex.background.getWidth();
-        int bgHeight = tex.background.getHeight();
-
-        int fillBgX = SCREEN_WIDTH / bgWidth;
-        int fillBgY = SCREEN_HEIGHT / bgHeight;
-
-        for (int col = 0; col <= fillBgY; ++col) {
-            for (int row = 0; row <= fillBgX; ++row) {
-                g.drawImage(tex.background, row * bgWidth, col * bgHeight, bgWidth, bgHeight, null);
-            }
-        }
-
-        player.render(g);
-        enemy.render(g);
-        c.render(g);
-        pickup.render(g);
-
-        //////////////////////////////////
-        g.dispose();
-        bs.show();
-
-
-    }
-
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_D) {
-            player.setVelX(5);
-        } else if (key == KeyEvent.VK_A) {
-            player.setVelX(-5);
-        } else if (key == KeyEvent.VK_S) {
-            player.setVelY(5);
-        } else if (key == KeyEvent.VK_W) {
-            player.setVelY(-5);
-        } else if (key == KeyEvent.VK_ENTER && !isShooting) {
-            isShooting = true;
-            c.addEntity(new Bullet(player.getX(), player.getY(), tex, this, c));
-        }
+        if (State == STATE.GAME) {
+            if (key == KeyEvent.VK_D) {
+                player.setVelX(5);
+            } else if (key == KeyEvent.VK_A) {
+                player.setVelX(-5);
+            } else if (key == KeyEvent.VK_S) {
+                player.setVelY(5);
+            } else if (key == KeyEvent.VK_W) {
+                player.setVelY(-5);
+            } else if (key == KeyEvent.VK_ENTER && !isShooting) {
+                isShooting = true;
+                c.addEntity(new Bullet(player.getX(), player.getY(), tex, this, c));
+            }
 
-        if (key == KeyEvent.VK_Q) {
-            System.out.println("\nExiting...");
-            System.exit(1);
-        }
+            if (key == KeyEvent.VK_Q) {
+                System.out.println("\nExiting...");
+                System.exit(1);
+            }
 
-        if (key == KeyEvent.VK_L) {
-            enemy.setVelX(5);
-        } else if (key == KeyEvent.VK_J) {
-            enemy.setVelX(-5);
-        } else if (key == KeyEvent.VK_K) {
-            enemy.setVelY(5);
-        } else if (key == KeyEvent.VK_I) {
-            enemy.setVelY(-5);
+            if (key == KeyEvent.VK_L) {
+                enemy.setVelX(5);
+            } else if (key == KeyEvent.VK_J) {
+                enemy.setVelX(-5);
+            } else if (key == KeyEvent.VK_K) {
+                enemy.setVelY(5);
+            } else if (key == KeyEvent.VK_I) {
+                enemy.setVelY(-5);
 //        } else if (key == KeyEvent.VK_SPACE && !isShooting) {
 //            isShooting = true;
 //            c.addEntity(new Bullet(enemy.getX(), enemy.getY(), tex));
+            }
         }
+
+    }
+
+    public static enum STATE {
+
+        MENU,
+        GAME
 
     }
 
