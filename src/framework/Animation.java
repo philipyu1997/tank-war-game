@@ -48,7 +48,7 @@ public class Animation {
 
         if (count > frames) {
             count = 0;
-            frames = -1;
+//            frames = -1;
         }
 
     }

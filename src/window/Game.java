@@ -1,62 +1,105 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package window;
 
-import framework.*;
-import objects.Explosion;
+import framework.Entity;
+import framework.GameState;
+import framework.Peripheral;
+import framework.Texture;
 import objects.HealthBar;
 import objects.Pickup;
 import objects.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
+ * @author Anthony Souza
  * @author Philip Yu
  */
-public class Game extends Canvas implements Runnable {
-
-    // THREADING
-    private boolean running = false;
-    private Thread thread;
+public class Game extends JPanel {
 
     // CONSTANTS
-    private static final long serialVersionUID = 6435385428141935074L;
+    private static final String gameTitle = "Tank Wars!";
     private static final int GAME_WIDTH = 1280;
     private static final int GAME_HEIGHT = 1280;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
+    private static final int MINI_MAP_WIDTH = getWindowWidth() / 4;
+    private static final int MINI_MAP_HEIGHT = getWindowHeight() / 4;
+    private static final int DIVIDER_WIDTH = 10;
     private static final int TANK1_ORIGIN_X = 200, TANK1_ORIGIN_Y = 192,
             TANK2_ORIGIN_X = (GAME_WIDTH - TANK1_ORIGIN_X - 64),
             TANK2_ORIGIN_Y = (GAME_HEIGHT - TANK1_ORIGIN_Y - 64 - 1);
-    private static final String TITLE = "Game";
     // OBJECTS
-    public static GameState State = GameState.MENU;
-    private static Texture tex;
-    //VARIABLES
+    public static GameState State = GameState.GAME;
+    static Texture tex;
+    private static Player p1, p2;
+    private static Game game;
+    private static Handler handler;
+    private static Camera c1, c2;
+    int leftViewX, leftViewY, rightViewX, rightViewY;
+    int initial_health = 100;
+    int lives = 3;
+    // GRAPHICS
+    private JFrame frame;
+    private Graphics2D buffer;
+    private Image miniMap;
+    private BufferedImage world, leftScreen, rightScreen;
+    private Menu menu;
+    private HealthBar health;
+    private Map map;
+    private Sound sound;
+    private Pickup pickup;
     private int spaceX = 15;
     private int spaceY = 105;
-    private Handler handler;
-    private HealthBar health;
-    private Pickup pickup;
-    private Explosion explosion;
-    private Player p1, p2;
-    private Camera c1, c2;
-    private Map map;
-    private Menu menu;
-
-    private BufferedImage world = new BufferedImage(WINDOW_WIDTH, WINDOW_HEIGHT, BufferedImage.TYPE_INT_RGB);
-    private BufferedImage leftScreen, rightScreen;
-    private BufferedImage background;
-    public LinkedList<EntityA> entityListA;
-    public LinkedList<EntityB> entityListB;
-    public LinkedList<EntityC> entityListC;
 
     public static void main(String[] args) {
 
-        new Window(WINDOW_WIDTH, WINDOW_HEIGHT, TITLE, new Game());
+        game = new Game();
+        game.init();
+
+        try {
+            while (true) {
+                tick();
+                game.repaint();
+                Thread.sleep(1000 / 144);
+            }
+        } catch (InterruptedException ignored) {
+            System.out.println(ignored.getMessage());
+        }
+
+    }
+
+    public static int getGameWidth() {
+        return GAME_WIDTH;
+    }
+
+    public static int getGameHeight() {
+        return GAME_HEIGHT;
+    }
+
+    public static int getWindowWidth() {
+        return WINDOW_WIDTH;
+    }
+
+    public static int getWindowHeight() {
+        return WINDOW_HEIGHT;
+    }
+
+    public static void tick() {
+
+        if (State == GameState.GAME) {
+            handler.tick();
+            c1.tick(p1);
+            c2.tick(p2);
+        }
 
     }
 
@@ -66,106 +109,15 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    protected synchronized void start() {
+    public static GameState getState() {
 
-        if (running)
-            return;
-
-        running = true;
-        thread = new Thread(this);
-        thread.start();
+        return State;
 
     }
 
-    protected synchronized void stop() {
+    public static void setState(GameState state) {
 
-        if (!running)
-            return;
-
-        running = false;
-
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.exit(1);
-
-    }
-
-    @Override
-    public void run() {
-
-        init();
-
-        long lastTime = System.nanoTime();
-        final double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
-        double delta = 0;
-        int updates = 0;
-        int frames = 0;
-        long timer = System.currentTimeMillis();
-
-        while (running) {
-            long now = System.nanoTime();
-
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-
-            if (delta >= 1) {
-                tick();
-                updates++;
-                delta--;
-            }
-
-            render();
-            frames++;
-
-
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
-                System.out.println("\nFPS: " + frames);
-                System.out.println("TICKS: " + updates);
-                updates = 0;
-                frames = 0;
-            }
-        }
-
-        stop();
-
-    }
-
-    public static int getGameWidth() {
-
-        return GAME_WIDTH;
-
-    }
-
-    public static int getGameHeight() {
-
-        return GAME_HEIGHT;
-
-    }
-
-    public static int getWindowWidth() {
-
-        return WINDOW_WIDTH;
-
-    }
-
-    public static int getWindowHeight() {
-
-        return WINDOW_HEIGHT;
-
-    }
-
-    private void tick() {
-
-        if (State == GameState.GAME) {
-            handler.tick();
-            c1.tick(p1);
-        }
+        State = state;
 
     }
 
@@ -173,9 +125,10 @@ public class Game extends Canvas implements Runnable {
 
         requestFocus();
 
-        tex = new Texture();
+        frame = new JFrame(gameTitle);
+        world = new BufferedImage(getGameWidth(), getGameHeight(), BufferedImage.TYPE_INT_RGB); /* Shows width * height of game world map */
 
-        background = tex.background;
+        tex = new Texture();
 
         handler = new Handler(this);
         map = new Map(handler);
@@ -183,77 +136,48 @@ public class Game extends Canvas implements Runnable {
         c1 = new Camera(0, 0);
         c2 = new Camera(0, 0);
 
-        p1 = new Player(0, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, 100);
-        p2 = new Player(1, TANK2_ORIGIN_X, TANK2_ORIGIN_Y, 0, 0, 180, tex, this, handler, 100);
+        p1 = new Player(Entity.Player, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, 100);
+//        p2 = new Player(Entity.Enemy, TANK2_ORIGIN_X, TANK2_ORIGIN_Y, 0, 0, 180, tex, this, handler, 100);
+        p2 = new Player(Entity.Enemy, 300, 192, 0, 0, 180, tex, this, handler, 100);
 
-        Peripheral pe1 = new Peripheral(p1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_ENTER);
-        Peripheral pe2 = new Peripheral(p2, KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, KeyEvent.VK_SPACE);
 
-        addKeyListener(pe1);
-        addKeyListener(pe2);
-        addMouseListener(pe1);
-        addMouseMotionListener(pe1);
+        Peripheral km1 = new Peripheral(p1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_ENTER);
+        Peripheral km2 = new Peripheral(p2, KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, KeyEvent.VK_SPACE);
+
+        handler.addObject(p1);
+        handler.addObject(p2);
+
+        map.loadWalls2();
+
+        frame.setLayout(new BorderLayout());
+        frame.add(this);
+
+        frame.addKeyListener(km1);
+        frame.addKeyListener(km2);
+        frame.addMouseListener(km1);
+        frame.addMouseMotionListener(km1);
 
         health = new HealthBar(p1, p2);
 
         menu = new Menu();
 
-//        pickup = new Pickup(100, 100, tex);
-        explosion = new Explosion(1, 100, 100, tex);
+        pickup = new Pickup(Entity.Pickup, 100, 100, tex);
+        handler.addObject(pickup);
 
-        handler.addObject(p1);
-        handler.addObject(p2);
-//        handler.addObject(pickup);
-        handler.addObject(explosion);
+        pickup = new Pickup(Entity.Pickup, 150, 100, tex);
+        handler.addObject(pickup);
 
-        map.loadWalls2();
+        pickup = new Pickup(Entity.Pickup, 200, 100, tex);
+        handler.addObject(pickup);
 
-    }
+        pickup = new Pickup(Entity.Pickup, 250, 100, tex);
+        handler.addObject(pickup);
 
-    private void render() {
-
-        BufferStrategy bs = this.getBufferStrategy();
-
-        if (bs == null) {
-            createBufferStrategy(3);
-            return;
-        }
-
-        Graphics g = bs.getDrawGraphics();
-        Graphics2D g2d = (Graphics2D) g;
-        //////////////////////////////////
-
-        g.drawImage(world, 0, 0, getWidth(), getHeight(), this);
-
-        if (State == GameState.GAME) {
-
-            g2d.translate(c1.getX(), c1.getY()); // beginning of camera
-
-            map.loadBackground(g2d);
-//            map.loadWalls(g2d);
-            handler.render(g2d);
-
-            g2d.translate(-c1.getX(), -c1.getY()); // end of camera
-
-            health.render(g2d);
-
-            renderForeground(g2d);
-
-        } else if (State == GameState.MENU) {
-
-            menu.render(g2d);
-
-        } else if (State == GameState.END) {
-
-            menu.render(g2d);
-
-        }
-
-        //////////////////////////////////
-        g.dispose();
-        bs.show();
-
-
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT + 22);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 
     private void renderForeground(Graphics g) {
@@ -312,4 +236,70 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-} // end class Game
+    public void drawDemo(Graphics g) {
+
+        // LOAD MAP
+        map.loadBackground(g);
+//        map.loadWalls(g);
+
+        // CAMERA VIEWPOINT
+        leftViewX = c1.getX();
+        leftViewY = c1.getY();
+        rightViewX = c2.getX();
+        rightViewY = c2.getY();
+
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+
+
+        if (State == GameState.GAME) {
+
+            Graphics2D g2 = (Graphics2D) g;
+            buffer = world.createGraphics();
+            super.paintComponent(g2);
+
+            // MAKING MINI-MAP, LEFT AND RIGHT VIEWPOINT
+            miniMap = world.getScaledInstance(MINI_MAP_WIDTH, MINI_MAP_HEIGHT, BufferedImage.SCALE_FAST);
+            leftScreen = world.getSubimage(c1.getX(), c1.getY(), WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+            rightScreen = world.getSubimage(c2.getX(), c2.getY(), WINDOW_WIDTH / 2, WINDOW_HEIGHT);
+
+            // LOADS MAP
+            drawDemo(buffer);
+
+            // DRAW TANKS
+            handler.render(buffer);
+
+//            p1.render(buffer);
+//            p2.render(buffer);
+
+            // DRAWING SCREEN
+            g2.drawImage(world, 0, 0, null);
+            g2.drawImage(leftScreen, 0, 0, this);
+            g2.drawImage(rightScreen, WINDOW_WIDTH / 2, 0, this);
+
+
+            // DRAWING MINI MAP AND DIVIDER
+            g2.fillRect((getWindowWidth() / 2) - (DIVIDER_WIDTH / 2), 0, DIVIDER_WIDTH, getWindowHeight());
+            g2.drawRect((getWindowWidth() / 2) - (MINI_MAP_WIDTH / 2), 0, MINI_MAP_WIDTH, MINI_MAP_HEIGHT);
+            g2.drawImage(miniMap, (getWindowWidth() / 2) - (MINI_MAP_WIDTH / 2), 0, null);
+
+            health.render(g);
+
+            // USED FOR DEBUGGING - REMOVE ME
+//            renderForeground(g);
+
+        } else if (State == GameState.MENU) {
+
+            menu.render(g);
+
+        } else if (State == GameState.END) {
+
+            menu.render(g);
+
+        }
+
+    }
+
+}

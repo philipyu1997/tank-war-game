@@ -1,6 +1,6 @@
 package objects;
 
-import framework.EntityA;
+import framework.Entity;
 import framework.GameObject;
 import framework.MovableObject;
 import framework.Texture;
@@ -10,70 +10,63 @@ import window.Handler;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Philip Yu
  */
-public class Player extends MovableObject implements EntityA {
+public class Player extends MovableObject {
 
     // CONSTANTS
-    private final int MOVEMENT_SPEED = 16;
-//    private Handler handler;
+    private final int MOVEMENT_SPEED = 4;
+    private final int ROTATION_SPEED = 2;
 
-    private int health;
-    private final int ROTATION_SPEED = 8;
-    //    private Texture tex;
-    private Game game;
     // OBJECTS
     private BufferedImage playerImage;
+    Random rand = new Random();
     private Handler handler;
     private Texture tex;
-
-    // VARIABLES
+    List<Bullet> bulletList = new ArrayList<>();
+    private Game game;
+    private Entity entity;
     private int width;
     private int height;
+    // VARIABLES
+    private int player;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean ShootPressed;
     private boolean isShooting;
+    private double health;
     private int bulletType;
-    private int player;
 
-    public Player(int player, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, int health) {
+    public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, double health) {
 
-        super(x, y, velX, velY, angle);
+        super(entity, x, y, velX, velY, angle);
         this.handler = handler;
-//        this.tex = tex;
         this.tex = Game.getInstance();
         this.game = game;
         this.health = health;
         this.width = tex.spr_tank[player].getWidth();
         this.height = tex.spr_tank[player].getHeight();
         this.isShooting = false;
-        this.bulletType = 2;
+        this.bulletType = 0;
         this.player = player;
 
-        switch (player) {
-            case 0:
-                playerImage = tex.spr_tank[player];
-                break;
-            case 1:
-                playerImage = tex.spr_tank[player];
-                break;
-            default:
-                break;
+        if (entity == Entity.Player) {
+            playerImage = tex.spr_tank[0];
+        } else if (entity == Entity.Enemy) {
+            playerImage = tex.spr_tank[1];
         }
 
     }
 
     @Override
     public void tick(List<GameObject> object) {
-
-//        x += velX;
-//        y += velY;
 
         if (UpPressed) {
             moveForwards();
@@ -105,46 +98,33 @@ public class Player extends MovableObject implements EntityA {
 
     private void checkCollision() {
 
-//        for (int i = 0; i < game.entityListC.size(); ++i) {
-//            EntityC entityC = game.entityListC.get(i);
-//
-//            if (Physics.checkCollision(entityC, this)) {
-//                c.removeEntity(entityC);
-//                health -= Bullet.getShellDamage();
-//
-//                if (health == 0)
-//                    c.removeEntity(this);
-//
-//            }
-//        }
-
         for (int i = 0; i < handler.objectList.size(); ++i) {
-            GameObject tempObject = handler.objectList.get(i);
+            GameObject gameObject = handler.objectList.get(i);
 
-            if (tempObject instanceof Block) {
-                if (getBoundsTop().intersects(tempObject.getBounds())) {
-                    y = tempObject.getY() + tex.spr_tank[player].getHeight() / 2 + 2;
+            if (gameObject instanceof Block) {
+                if (getBoundsTop().intersects(gameObject.getBounds())) {
+                    y = gameObject.getY() + tex.spr_tank[player].getHeight() / 2 + 2;
                 }
 
-                if (getBoundsBottom().intersects(tempObject.getBounds())) {
-                    y = tempObject.getY() - tex.spr_tank[player].getHeight() - 2;
+                if (getBoundsBottom().intersects(gameObject.getBounds())) {
+                    y = gameObject.getY() - tex.spr_tank[player].getHeight() - 2;
                 }
 
-                if (getBoundsLeft().intersects(tempObject.getBounds())) {
-                    x = tempObject.getX() + tex.spr_tank[player].getWidth() / 2 + 2;
+                if (getBoundsLeft().intersects(gameObject.getBounds())) {
+                    x = gameObject.getX() + tex.spr_tank[player].getWidth() / 2 + 2;
                 }
 
-                if (getBoundsRight().intersects(tempObject.getBounds())) {
-                    x = tempObject.getX() - tex.spr_tank[player].getWidth() - 2;
+                if (getBoundsRight().intersects(gameObject.getBounds())) {
+                    x = gameObject.getX() - tex.spr_tank[player].getWidth() - 2;
                 }
             }
 
-//            if (tempObject instanceof PowerUp) {
-//                if (getBounds().intersects(tempObject.getBounds())) {
-//                    handler.removeObject(tempObject);
-//                    bulletType = 2;
-//                }
-//            }
+            if (gameObject instanceof Pickup) {
+                if (getBounds().intersects(gameObject.getBounds())) {
+                    handler.removeObject(gameObject);
+                    bulletType = rand.nextInt(3);
+                }
+            }
 
         }
 
@@ -172,8 +152,6 @@ public class Player extends MovableObject implements EntityA {
 
     @Override
     public void render(Graphics g) {
-
-//        g.drawImage(tex.spr_tank[player], x, y, null);
 
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), playerImage.getWidth() / 2.0, playerImage.getHeight() / 2.0);
@@ -220,7 +198,7 @@ public class Player extends MovableObject implements EntityA {
 
     }
 
-    public int getHealth() {
+    public double getHealth() {
 
         return health;
 
@@ -318,15 +296,18 @@ public class Player extends MovableObject implements EntityA {
 
     }
 
-    private void fire() {
+    public void setHealth(double health) {
 
-        handler.addObject(new Bullet(this, x, y, velX, velY, angle, bulletType, game, handler));
+        this.health = health;
 
     }
 
-    public void setHealth(int health) {
+    private void fire() {
 
-        this.health = health;
+        Bullet bullet = new Bullet(Entity.Bullet, this, x, y, velX, velY, angle, bulletType, game, handler);
+
+        bulletList.add(bullet);
+        handler.addObject(bullet);
 
     }
 
@@ -334,6 +315,14 @@ public class Player extends MovableObject implements EntityA {
 
         return playerImage;
 
+    }
+
+    public List<Bullet> getBulletList() {
+        return bulletList;
+    }
+
+    public void setBulletList(List<Bullet> bulletList) {
+        this.bulletList = bulletList;
     }
 
 } // end class Player

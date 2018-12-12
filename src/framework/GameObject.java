@@ -8,11 +8,14 @@ import java.util.List;
  */
 public abstract class GameObject {
 
+    // VARIABLES
+    protected Entity entity;
     protected int x, y;
     protected int velX = 0, velY = 0;
 
-    public GameObject(int x, int y) {
+    public GameObject(Entity entity, int x, int y) {
 
+        this.entity = entity;
         this.x = x;
         this.y = y;
 
@@ -69,6 +72,18 @@ public abstract class GameObject {
     public void setVelY(int velY) {
 
         this.velY = velY;
+
+    }
+
+    public Entity getEntity() {
+
+        return entity;
+
+    }
+
+    public void setEntity(Entity entity) {
+
+        this.entity = entity;
 
     }
 

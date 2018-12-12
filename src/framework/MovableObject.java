@@ -8,11 +8,12 @@ import java.util.List;
  */
 public abstract class MovableObject extends GameObject {
 
+    // VARIABLES
     protected int velX, velY, angle;
 
-    public MovableObject(int x, int y, int velX, int velY, int angle) {
+    public MovableObject(Entity entity, int x, int y, int velX, int velY, int angle) {
 
-        super(x, y);
+        super(entity, x, y);
         this.velX = velX;
         this.velY = velY;
         this.angle = angle;

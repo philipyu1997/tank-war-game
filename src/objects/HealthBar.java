@@ -1,5 +1,6 @@
 package objects;
 
+import framework.GameState;
 import window.Game;
 
 import java.awt.*;
@@ -28,15 +29,15 @@ public class HealthBar {
 
         if (p1.getHealth() > 0) {
             g.setColor(Color.GREEN);
-            g.fillRect(15, 15, p1.getHealth() * 2, 50);
+            g.fillRect(15, 15, (int) p1.getHealth() * 2, 50);
         } else if (p1.getHealth() <= 0) {
             g.setColor(Color.RED);
-//            State = GameState.END;
+            Game.setState(GameState.END);
         }
 
         g.drawString("Player Health: " + p1.getHealth(), 15, 90);
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawRect(15, 15, 200, 50);
 
         // ENEMY HEALTH BAR
@@ -45,15 +46,15 @@ public class HealthBar {
 
         if (p2.getHealth() > 0) {
             g.setColor(Color.GREEN);
-            g.fillRect(WINDOW_WIDTH - 215, 15, p2.getHealth() * 2, 50);
+            g.fillRect(WINDOW_WIDTH - 215, 15, (int) p2.getHealth() * 2, 50);
         } else if (p2.getHealth() <= 0) {
             g.setColor(Color.BLUE);
-//            State = GameState.END;
+            Game.setState(GameState.END);
         }
 
-        g.drawString("Enemy Health: " + p2.getHealth(), WINDOW_WIDTH - 215, 90);
+        g.drawString("Enemy Health: " + p2.getHealth(), WINDOW_WIDTH - 135, 90);
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawRect(WINDOW_WIDTH - 215, 15, 200, 50);
 
     }

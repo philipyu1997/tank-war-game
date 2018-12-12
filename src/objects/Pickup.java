@@ -1,7 +1,7 @@
 package objects;
 
 import framework.Animation;
-import framework.EntityA;
+import framework.Entity;
 import framework.GameObject;
 import framework.Texture;
 
@@ -11,18 +11,18 @@ import java.util.List;
 /**
  * @author Philip Yu
  */
-public class Pickup extends GameObject implements EntityA {
+public class Pickup extends GameObject {
 
     private Texture tex;
 
     private Animation anim;
 
-    public Pickup(int x, int y, Texture tex) {
+    public Pickup(Entity entity, int x, int y, Texture tex) {
 
-        super(x, y);
+        super(entity, x, y);
         this.tex = tex;
 
-//        anim = new Animation(10, tex.spr_pickup[0], tex.spr_pickup[1], tex.spr_pickup[2], tex.spr_pickup[3]);
+        anim = new Animation(10, tex.spr_pickup);
 
     }
 

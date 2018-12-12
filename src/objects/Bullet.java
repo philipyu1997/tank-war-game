@@ -1,6 +1,6 @@
 package objects;
 
-import framework.EntityC;
+import framework.Entity;
 import framework.GameObject;
 import framework.MovableObject;
 import framework.Texture;
@@ -15,12 +15,14 @@ import java.util.List;
 /**
  * @author Philip Yu
  */
-public class Bullet extends MovableObject implements EntityC {
+public class Bullet extends MovableObject {
 
 
-    private final static int shellDamage = 10;
     // CONSTANTS
-    private final int MOVEMENT_SPEED = 8;
+    private final static double SHELL_DAMAGE = 10;
+    private final int MOVEMENT_SPEED = 4;
+    private int explosion_type;
+
     // OBJECTS
     private BufferedImage bulletImage;
     private Game game;
@@ -28,17 +30,16 @@ public class Bullet extends MovableObject implements EntityC {
     private Texture tex;
     private Explosion explosion;
 
-    public Bullet(Player player, int x, int y, int velX, int velY, int angle, int bulletType, Game game, Handler handler) {
+    public Bullet(Entity entity, Player player, int x, int y, int velX, int velY, int angle, int bulletType, Game game, Handler handler) {
 
-        super(x + player.getPlayerImage().getWidth(null) / 3,
-                y + player.getPlayerImage().getHeight(null) / 3,
+
+        super(entity,
+                x + player.getPlayerImage().getWidth() / 3,
+                y + player.getPlayerImage().getHeight() / 3,
                 velX * 10, velY * 10, angle);
         this.tex = Game.getInstance();
-//        this.explosion = new Explosion(1, x, y, tex);
         this.game = game;
         this.handler = handler;
-
-//        handler.addObject(explosion);
 
         switch (bulletType) {
             case 0:
@@ -51,7 +52,7 @@ public class Bullet extends MovableObject implements EntityC {
                 this.bulletImage = tex.spr_weapon[bulletType];
                 break;
             default:
-                this.bulletImage = tex.spr_weapon[2];
+                this.bulletImage = tex.spr_weapon[0];
                 break;
         }
 
@@ -70,70 +71,63 @@ public class Bullet extends MovableObject implements EntityC {
 
     }
 
-    private boolean checkCollision() {
+    public static double getShellDamage() {
 
-        boolean collide = false;
+        return SHELL_DAMAGE;
 
-//        for (int i = 0; i < game.entityListB.size(); ++i) {
-//            EntityB entityB = game.entityListB.get(i);
-//
-//            if (Physics.checkCollision(this, entityB)) {
-//                System.out.println("\nCollision Detected!");
-////                c.removeEntity(entityB);
-//                c.removeEntity(this);
-//                System.out.println("Bullet Removed...");
-//            }
-//        }
-//
-//        for (int i = 0; i < game.entityListA.size(); ++i) {
-//            EntityA entityA = game.entityListA.get(i);
-//
-//            if (Physics.checkCollision(this, entityA)) {
-//                System.out.println("\nCollision Detected!");
-////                c.removeEntity(entityA);
-//                c.removeEntity(this);
-//                System.out.println("Bullet Removed...");
-//            }
-//        }
+    }
+
+    private void checkCollision() {
 
         for (int i = 0; i < handler.objectList.size(); ++i) {
-            GameObject tempObject = handler.objectList.get(i);
+            GameObject gameObject = handler.objectList.get(i);
 
-            if (tempObject instanceof Block) {
-                if (getBounds().intersects(tempObject.getBounds())) {
-                    collide = true;
-                    handler.removeObject(tempObject);
-                    explosion = new Explosion(1, x, y, tex);
+            if (gameObject.getEntity() == Entity.Block) {
+                Block block = (Block) gameObject;
+
+                if (getBounds().intersects(block.getBounds())) {
+                    handler.removeObject(block);
+                    explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                     handler.addObject(explosion);
                     handler.removeObject(this);
                 }
             }
 
-        }
+            if (gameObject.getEntity() == Entity.Player) {
+                Player player = (Player) gameObject;
 
+                if (!player.getBulletList().contains(this)) {
+                    if (getBounds().intersects(player.getBounds())) {
+                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                        handler.addObject(explosion);
+                        handler.removeObject(this);
 
-        return collide;
+                        if (player.getHealth() > 0) {
+                            player.setHealth(player.getHealth() - SHELL_DAMAGE);
+                        } else if (player.getHealth() == 0) {
+                            handler.removeObject(player);
+                        }
+                    }
+                }
+            }
 
-    }
+            if (gameObject.getEntity() == Entity.Enemy) {
+                Player enemy = (Player) gameObject;
 
-    public void checkBorder() {
+                if (!enemy.getBulletList().contains(this)) {
+                    if (getBounds().intersects(enemy.getBounds())) {
+                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                        handler.addObject(explosion);
+                        handler.removeObject(this);
 
-        if (x < 0) {
-            handler.removeObject(this);
-        }
-
-        if (x >= Game.getWindowWidth() - 16) {
-            handler.removeObject(this);
-
-        }
-
-        if (y < 0) {
-            handler.removeObject(this);
-
-        }
-
-        if (y >= Game.getWindowHeight() - 16) {
-            handler.removeObject(this);
+                        if (enemy.getHealth() > 0) {
+                            enemy.setHealth(enemy.getHealth() - SHELL_DAMAGE);
+                        } else if (enemy.getHealth() == 0) {
+                            handler.removeObject(enemy);
+                        }
+                    }
+                }
+            }
 
         }
 
@@ -159,9 +153,26 @@ public class Bullet extends MovableObject implements EntityC {
 
     }
 
-    public static int getShellDamage() {
+    public void checkBorder() {
 
-        return shellDamage;
+        if (x < 0) {
+            handler.removeObject(this);
+        }
+
+        if (x >= Game.getGameWidth() - 16) {
+            handler.removeObject(this);
+
+        }
+
+        if (y < 0) {
+            handler.removeObject(this);
+
+        }
+
+        if (y >= Game.getGameHeight() - 16) {
+            handler.removeObject(this);
+
+        }
 
     }
 

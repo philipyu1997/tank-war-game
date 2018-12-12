@@ -1,6 +1,7 @@
 package objects;
 
 import framework.Animation;
+import framework.Entity;
 import framework.GameObject;
 import framework.Texture;
 
@@ -19,9 +20,9 @@ public class Explosion extends GameObject {
 
     private int explosion_type;
 
-    public Explosion(int explosion_type, int x, int y, Texture tex) {
+    public Explosion(Entity entity, int explosion_type, int x, int y, Texture tex) {
 
-        super(x, y);
+        super(entity, x, y);
         this.explosion_type = explosion_type;
         this.tex = tex;
 

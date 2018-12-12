@@ -1,5 +1,6 @@
 package objects;
 
+import framework.Entity;
 import framework.GameObject;
 import framework.Texture;
 import window.Game;
@@ -19,9 +20,9 @@ public class Block extends GameObject {
     // OBJECTS
     private Texture tex = Game.getInstance();
 
-    public Block(int wallType, int x, int y) {
+    public Block(Entity entity, int wallType, int x, int y) {
 
-        super(x, y);
+        super(entity, x, y);
         this.wallType = wallType;
         this.width = tex.spr_wall[wallType].getWidth();
         this.height = tex.spr_wall[wallType].getHeight();

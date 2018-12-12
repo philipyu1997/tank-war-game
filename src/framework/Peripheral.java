@@ -94,10 +94,15 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
                 player.toggleShootPressed();
             }
 
+            if (key == KeyEvent.VK_M) {
+                Game.State = GameState.MENU;
+            }
+
             if (key == KeyEvent.VK_Q) {
                 System.out.println("\nExiting...");
                 System.exit(1);
             }
+
 
         } else if (State == GameState.MENU) {
 
@@ -108,6 +113,17 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
             } else if (key == KeyEvent.VK_3) {
                 System.out.println("\nQuit Button Pressed...");
                 System.out.println("Exiting Game...");
+                System.exit(1);
+            }
+
+        } else if (State == GameState.END) {
+
+            if (key == KeyEvent.VK_M) {
+                Game.State = GameState.MENU;
+            }
+
+            if (key == KeyEvent.VK_Q) {
+                System.out.println("\nExiting...");
                 System.exit(1);
             }
 
@@ -161,7 +177,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
 
         // Play Button
         if (mouseX >= Game.getWindowWidth() / 2 - 50 && mouseX <= Game.getWindowWidth() / 2 + 50) {
-            if (mouseY >= 150 && mouseY <= 200) {
+            if (mouseY >= 150 + 22 && mouseY <= 200 + 22) {
                 // Pressed Play Button
                 State = GameState.GAME;
             }
@@ -169,7 +185,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
 
         // Help Button
         if (mouseX >= Game.getWindowWidth() / 2 - 50 && mouseX <= Game.getWindowWidth() / 2 + 50) {
-            if (mouseY >= 250 && mouseY <= 300) {
+            if (mouseY >= 250 + 22 && mouseY <= 300 + 22) {
                 // Pressed Help Button
                 System.out.println("\nMouse Input: Help Button Pressed!");
             }
@@ -177,7 +193,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
 
         // Quit Button
         if (mouseX >= Game.getWindowWidth() / 2 - 50 && mouseX <= Game.getWindowWidth() / 2 + 50) {
-            if (mouseY >= 350 && mouseY <= 400) {
+            if (mouseY >= 350 + 22 && mouseY <= 400 + 22) {
                 // Pressed Quit Button
                 System.out.println("\nMouse Input: Quit Button Pressed...");
                 System.out.println("Exiting Game...");
