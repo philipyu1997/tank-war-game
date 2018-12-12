@@ -136,9 +136,9 @@ public class Game extends JPanel {
         c1 = new Camera(0, 0);
         c2 = new Camera(0, 0);
 
-        p1 = new Player(Entity.Player, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, initial_health, 3);
+        p1 = new Player(Entity.Player, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, initial_health, lives);
 //        p2 = new Player(Entity.Enemy, TANK2_ORIGIN_X, TANK2_ORIGIN_Y, 0, 0, 180, tex, this, handler, 100);
-        p2 = new Player(Entity.Enemy, 300, 192, 0, 0, 180, tex, this, handler, initial_health, 3);
+        p2 = new Player(Entity.Enemy, 300, 192, 0, 0, 180, tex, this, handler, initial_health, lives);
 
 
         Peripheral km1 = new Peripheral(p1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_ENTER);

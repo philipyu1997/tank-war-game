@@ -85,11 +85,19 @@ public class Bullet extends MovableObject {
             if (gameObject.getEntity() == Entity.Block) {
                 Block block = (Block) gameObject;
 
-                if (getBounds().intersects(block.getBounds())) {
-                    handler.removeObject(block);
-                    explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
-                    handler.addObject(explosion);
-                    handler.removeObject(this);
+                if (block.isBreakable()) {
+                    if (getBounds().intersects(block.getBounds())) {
+                        handler.removeObject(block);
+                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                        handler.addObject(explosion);
+                        handler.removeObject(this);
+                    }
+                } else if (!block.isBreakable()) {
+                    if (getBounds().intersects(block.getBounds())) {
+                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                        handler.addObject(explosion);
+                        handler.removeObject(this);
+                    }
                 }
             }
 
