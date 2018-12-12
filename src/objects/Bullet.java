@@ -19,7 +19,7 @@ public class Bullet extends MovableObject {
 
 
     // CONSTANTS
-    private final static double SHELL_DAMAGE = 10;
+    private static int SHELL_DAMAGE = 10;
     private final int MOVEMENT_SPEED = 4;
     private int explosion_type;
 
@@ -104,7 +104,10 @@ public class Bullet extends MovableObject {
 
                         if (player.getHealth() > 0) {
                             player.setHealth(player.getHealth() - SHELL_DAMAGE);
-                        } else if (player.getHealth() == 0) {
+                        } else if (player.getHealth() == 0 && player.getLives() > 0) {
+                            player.setLives(player.getLives() - 1);
+                            player.setHealth(100);
+                        } else if (player.getLives() == 0) {
                             handler.removeObject(player);
                         }
                     }
@@ -122,13 +125,15 @@ public class Bullet extends MovableObject {
 
                         if (enemy.getHealth() > 0) {
                             enemy.setHealth(enemy.getHealth() - SHELL_DAMAGE);
-                        } else if (enemy.getHealth() == 0) {
+                        } else if (enemy.getHealth() == 0 && enemy.getLives() > 1) {
+                            enemy.setLives(enemy.getLives() - 1);
+                            enemy.setHealth(100);
+                        } else if (enemy.getLives() == 0) {
                             handler.removeObject(enemy);
                         }
                     }
                 }
             }
-
         }
 
     }

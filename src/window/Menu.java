@@ -22,6 +22,7 @@ public class Menu {
     public void render(Graphics g) {
 
         if (State == GameState.MENU) {
+
             g2d = (Graphics2D) g;
 
             // DRAWS BACKGROUND
@@ -55,6 +56,7 @@ public class Menu {
             g.setColor(Color.WHITE);
             printSimpleString("3. Quit", 50, quitButton.x + 60, quitButton.y + 35);
             g2d.draw(quitButton);
+
         } else if (State == GameState.END) {
 
             g2d = (Graphics2D) g;

@@ -136,9 +136,9 @@ public class Game extends JPanel {
         c1 = new Camera(0, 0);
         c2 = new Camera(0, 0);
 
-        p1 = new Player(Entity.Player, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, 100);
+        p1 = new Player(Entity.Player, TANK1_ORIGIN_X, TANK1_ORIGIN_Y, 0, 0, 0, tex, this, handler, initial_health, 3);
 //        p2 = new Player(Entity.Enemy, TANK2_ORIGIN_X, TANK2_ORIGIN_Y, 0, 0, 180, tex, this, handler, 100);
-        p2 = new Player(Entity.Enemy, 300, 192, 0, 0, 180, tex, this, handler, 100);
+        p2 = new Player(Entity.Enemy, 300, 192, 0, 0, 180, tex, this, handler, initial_health, 3);
 
 
         Peripheral km1 = new Peripheral(p1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_ENTER);
@@ -240,7 +240,7 @@ public class Game extends JPanel {
 
         // LOAD MAP
         map.loadBackground(g);
-//        map.loadWalls(g);
+        map.loadWalls(g);
 
         // CAMERA VIEWPOINT
         leftViewX = c1.getX();
@@ -271,9 +271,6 @@ public class Game extends JPanel {
             // DRAW TANKS
             handler.render(buffer);
 
-//            p1.render(buffer);
-//            p2.render(buffer);
-
             // DRAWING SCREEN
             g2.drawImage(world, 0, 0, null);
             g2.drawImage(leftScreen, 0, 0, this);
@@ -288,7 +285,7 @@ public class Game extends JPanel {
             health.render(g);
 
             // USED FOR DEBUGGING - REMOVE ME
-//            renderForeground(g);
+            renderForeground(g);
 
         } else if (State == GameState.MENU) {
 

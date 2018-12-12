@@ -30,7 +30,6 @@ public class Player extends MovableObject {
     private Texture tex;
     List<Bullet> bulletList = new ArrayList<>();
     private Game game;
-    private Entity entity;
     private int width;
     private int height;
     // VARIABLES
@@ -41,21 +40,22 @@ public class Player extends MovableObject {
     private boolean LeftPressed;
     private boolean ShootPressed;
     private boolean isShooting;
-    private double health;
+    private int health;
+    private int lives;
     private int bulletType;
 
-    public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, double health) {
+    public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, int health, int lives) {
 
         super(entity, x, y, velX, velY, angle);
         this.handler = handler;
         this.tex = Game.getInstance();
         this.game = game;
         this.health = health;
+        this.lives = lives;
         this.width = tex.spr_tank[player].getWidth();
         this.height = tex.spr_tank[player].getHeight();
         this.isShooting = false;
         this.bulletType = 0;
-        this.player = player;
 
         if (entity == Entity.Player) {
             playerImage = tex.spr_tank[0];
@@ -198,7 +198,7 @@ public class Player extends MovableObject {
 
     }
 
-    public double getHealth() {
+    public int getHealth() {
 
         return health;
 
@@ -296,7 +296,7 @@ public class Player extends MovableObject {
 
     }
 
-    public void setHealth(double health) {
+    public void setHealth(int health) {
 
         this.health = health;
 
@@ -323,6 +323,18 @@ public class Player extends MovableObject {
 
     public void setBulletList(List<Bullet> bulletList) {
         this.bulletList = bulletList;
+    }
+
+    public int getLives() {
+
+        return lives;
+
+    }
+
+    public void setLives(int lives) {
+
+        this.lives = lives;
+
     }
 
 } // end class Player

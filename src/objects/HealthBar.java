@@ -30,12 +30,13 @@ public class HealthBar {
         if (p1.getHealth() > 0) {
             g.setColor(Color.GREEN);
             g.fillRect(15, 15, (int) p1.getHealth() * 2, 50);
-        } else if (p1.getHealth() <= 0) {
+        } else if (p1.getLives() == 0) {
             g.setColor(Color.RED);
             Game.setState(GameState.END);
         }
 
-        g.drawString("Player Health: " + p1.getHealth(), 15, 90);
+        g.drawString("Player Lives: " + p1.getLives(), 15, 90);
+        g.drawString("Player Health: " + p1.getHealth(), 15, 105);
 
         g.setColor(Color.BLACK);
         g.drawRect(15, 15, 200, 50);
@@ -47,12 +48,13 @@ public class HealthBar {
         if (p2.getHealth() > 0) {
             g.setColor(Color.GREEN);
             g.fillRect(WINDOW_WIDTH - 215, 15, (int) p2.getHealth() * 2, 50);
-        } else if (p2.getHealth() <= 0) {
+        } else if (p2.getLives() == 1) {
             g.setColor(Color.BLUE);
             Game.setState(GameState.END);
         }
 
-        g.drawString("Enemy Health: " + p2.getHealth(), WINDOW_WIDTH - 135, 90);
+        g.drawString("Enemy Lives: " + p2.getLives(), WINDOW_WIDTH - 135, 90);
+        g.drawString("Enemy Health: " + p2.getHealth(), WINDOW_WIDTH - 135, 105);
 
         g.setColor(Color.BLACK);
         g.drawRect(WINDOW_WIDTH - 215, 15, 200, 50);
