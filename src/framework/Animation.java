@@ -14,15 +14,15 @@ public class Animation {
     private int index = 0;
     private int count = 0;
 
-    private BufferedImage[] bimg;
+    private BufferedImage[] image;
 
     private BufferedImage currentImg;
 
-    public Animation(int speed, BufferedImage[] bimg) {
+    public Animation(int speed, BufferedImage[] image) {
 
         this.speed = speed;
-        this.bimg = bimg;
-        frames = bimg.length;
+        this.image = image;
+        frames = image.length;
 
     }
 
@@ -41,14 +41,13 @@ public class Animation {
 
         for (int i = 0; i < frames; ++i) {
             if (count == i)
-                currentImg = bimg[i];
+                currentImg = image[i];
         }
 
         count++;
 
         if (count > frames) {
             count = 0;
-//            frames = -1;
         }
 
     }

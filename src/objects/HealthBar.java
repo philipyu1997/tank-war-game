@@ -32,7 +32,7 @@ public class HealthBar {
             g.fillRect(15, 15, p1.getHealth() * 2, 50);
         } else if (p1.getLives() == 1) {
             g.setColor(Color.RED);
-            Game.setState(GameState.END);
+            Game.setState(GameState.P2_WINS);
         }
 
         g.setColor(Color.GREEN);
@@ -51,7 +51,7 @@ public class HealthBar {
             g.fillRect(WINDOW_WIDTH - 215, 15, p2.getHealth() * 2, 50);
         } else if (p2.getLives() == 1) {
             g.setColor(Color.BLUE);
-            Game.setState(GameState.END);
+            Game.setState(GameState.P1_WINS);
         }
 
         g.setColor(Color.GREEN);

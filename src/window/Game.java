@@ -290,7 +290,7 @@ public class Game extends JPanel {
 
             menu.render(g);
 
-        } else if (State == GameState.END) {
+        } else if (State == GameState.P1_WINS || State == GameState.P2_WINS) {
 
             menu.render(g);
 

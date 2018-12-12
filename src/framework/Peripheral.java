@@ -116,11 +116,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
                 System.exit(1);
             }
 
-        } else if (State == GameState.END) {
-
-            if (key == KeyEvent.VK_M) {
-                Game.State = GameState.MENU;
-            }
+        } else if (State == GameState.P1_WINS || State == GameState.P2_WINS) {
 
             if (key == KeyEvent.VK_Q) {
                 System.out.println("\nExiting...");

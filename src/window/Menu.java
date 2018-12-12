@@ -57,7 +57,7 @@ public class Menu {
             printSimpleString("3. Quit", 50, quitButton.x + 60, quitButton.y + 35);
             g2d.draw(quitButton);
 
-        } else if (State == GameState.END) {
+        } else if (State == GameState.P1_WINS) {
 
             g2d = (Graphics2D) g;
 
@@ -66,15 +66,34 @@ public class Menu {
 
             Font fnt0 = new Font("arial", Font.BOLD, 50);
             g.setFont(fnt0);
-            g.setColor(Color.WHITE);
+            g.setColor(Color.RED);
 
-            printSimpleString("GAME OVER", fnt0.getSize(), Game.getWindowWidth() / 2, 200);
+            printSimpleString("PLAYER ONE", fnt0.getSize(), Game.getWindowWidth() / 2, 200);
+            printSimpleString("WINS!", fnt0.getSize(), Game.getWindowWidth() / 2, 250);
 
             Font fnt1 = new Font("arial", Font.BOLD, 30);
             g.setFont(fnt1);
 
-            printSimpleString("Press M for Menu", fnt1.getSize(), getWindowWidth() / 2, 300);
-            printSimpleString("Press Q to Quit", fnt1.getSize(), getWindowWidth() / 2, 350);
+            printSimpleString("Press Q to Quit", fnt1.getSize(), getWindowWidth() / 2, 300);
+
+        } else if (State == GameState.P2_WINS) {
+
+            g2d = (Graphics2D) g;
+
+            // DRAWS BACKGROUND
+            g.fillRect(0, 0, 800, 600);
+
+            Font fnt0 = new Font("arial", Font.BOLD, 50);
+            g.setFont(fnt0);
+            g.setColor(Color.BLUE);
+
+            printSimpleString("PLAYER TWO", fnt0.getSize(), Game.getWindowWidth() / 2, 200);
+            printSimpleString("WINS!", fnt0.getSize(), Game.getWindowWidth() / 2, 250);
+
+            Font fnt1 = new Font("arial", Font.BOLD, 30);
+            g.setFont(fnt1);
+
+            printSimpleString("Press Q to Quit", fnt1.getSize(), getWindowWidth() / 2, 300);
 
         }
 
