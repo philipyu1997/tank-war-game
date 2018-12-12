@@ -5,10 +5,7 @@
  */
 package window;
 
-import framework.Entity;
-import framework.GameState;
-import framework.Peripheral;
-import framework.Texture;
+import framework.*;
 import objects.Player;
 import objects.PowerUp;
 
@@ -36,9 +33,9 @@ public class Game extends JPanel {
     private static final int TANK1_ORIGIN_X = 200, TANK1_ORIGIN_Y = 192,
             TANK2_ORIGIN_X = (GAME_WIDTH - TANK1_ORIGIN_X - 64),
             TANK2_ORIGIN_Y = (GAME_HEIGHT - TANK1_ORIGIN_Y - 64 - 1);
-    private static Texture tex;
     private final int INITIAL_HEALTH = 100;
     private final int INITIAL_LIVES = 3;
+
     // GRAPHICS
     private JFrame frame;
     private Graphics2D buffer;
@@ -46,11 +43,12 @@ public class Game extends JPanel {
     private BufferedImage world, leftScreen, rightScreen;
 
     // OBJECTS
-    public static GameState State = GameState.GAME;
+    public static GameState State = GameState.MENU;
     private static Player p1, p2;
     private static Game game;
     private static Handler handler;
     private static Camera c1, c2;
+    private static Texture tex;
     private Menu menu;
     private Statistics statistics;
     private HealthBar health;
@@ -231,7 +229,8 @@ public class Game extends JPanel {
             // USED FOR DEBUGGING - REMOVE ME
 //            statistics.renderForeground(g); // TODO: REMOVE ME; USED FOR DEBUGGING
         } else if (State == GameState.MENU) {
-
+            menu.render(g);
+        } else if (State == GameState.HELP) {
             menu.render(g);
         } else if (State == GameState.P1_WINS || State == GameState.P2_WINS) {
             menu.render(g);

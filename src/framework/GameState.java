@@ -6,6 +6,7 @@ package framework;
 public enum GameState {
 
     MENU,
+    HELP,
     GAME,
     P1_WINS,
     P2_WINS,

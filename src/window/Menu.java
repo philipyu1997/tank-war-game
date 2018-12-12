@@ -58,6 +58,27 @@ public class Menu {
             printStringCenter("3. Quit", 50, quitButton.x + 60, quitButton.y + 35);
             g2d.draw(quitButton);
 
+        } else if (State == GameState.HELP) {
+
+            g2d = (Graphics2D) g;
+
+            // DRAWS BACKGROUND
+            g.fillRect(0, 0, 800, 600);
+
+            Font fnt0 = new Font("arial", Font.BOLD, 50);
+            g.setFont(fnt0);
+            g.setColor(Color.WHITE);
+
+            printStringCenter("HELP", fnt0.getSize(), Game.getWindowWidth() / 2, 200);
+
+            Font fnt1 = new Font("arial", Font.BOLD, 30);
+            g.setFont(fnt1);
+
+            printStringCenter("Player 1 Controls: W A S D, ENTER", fnt1.getSize(), getWindowWidth() / 2, 300);
+            printStringCenter("Player 2 Controls: I J K L, SPACE", fnt1.getSize(), getWindowWidth() / 2, 350);
+
+            printStringCenter("Press M to Menu", fnt1.getSize(), getWindowWidth() / 2, 450);
+
         } else if (State == GameState.P1_WINS) {
 
             g2d = (Graphics2D) g;

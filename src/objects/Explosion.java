@@ -1,9 +1,6 @@
 package objects;
 
-import framework.Animation;
-import framework.Entity;
-import framework.GameObject;
-import framework.Texture;
+import framework.*;
 
 import java.awt.*;
 import java.util.List;
@@ -20,6 +17,7 @@ public class Explosion extends GameObject {
     private Animation explosion_large;
     private Animation explosion_small;
     private Texture tex;
+
 
     public Explosion(Entity entity, int explosion_type, int x, int y, Texture tex) {
 
