@@ -5,7 +5,10 @@
  */
 package window;
 
-import framework.*;
+import framework.Entity;
+import framework.GameState;
+import framework.Peripheral;
+import framework.Texture;
 import objects.Player;
 import objects.PowerUp;
 
@@ -22,7 +25,7 @@ import java.util.Random;
 public class Game extends JPanel {
 
     // CONSTANTS
-    private static final String gameTitle = "Tank Wars!";
+    private static final String gameTitle = "Tank War";
     private static final int GAME_WIDTH = 1280;
     private static final int GAME_HEIGHT = 1280;
     private static final int WINDOW_WIDTH = 800;
