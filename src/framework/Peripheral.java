@@ -95,7 +95,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
             }
 
             if (key == KeyEvent.VK_M) {
-                State = GameState.MENU;
+                Game.setState(GameState.MENU);
             }
 
             if (key == KeyEvent.VK_Q) {
@@ -107,10 +107,10 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
         } else if (State == GameState.MENU) {
 
             if (key == KeyEvent.VK_1) {
-                State = GameState.GAME;
+                Game.setState(GameState.GAME);
             } else if (key == KeyEvent.VK_2) {
                 System.out.println("\nKey Input: Help Button Pressed");
-                State = GameState.HELP;
+                Game.setState(GameState.HELP);
             } else if (key == KeyEvent.VK_3) {
                 System.out.println("\nQuit Button Pressed...");
                 System.out.println("Exiting Game...");
@@ -120,7 +120,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
         } else if (State == GameState.HELP) {
 
             if (key == KeyEvent.VK_M) {
-                State = GameState.MENU;
+                Game.setState(GameState.MENU);
             }
 
             if (key == KeyEvent.VK_Q) {
@@ -194,7 +194,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
         if (mouseX >= Game.getWindowWidth() / 2 - 50 && mouseX <= Game.getWindowWidth() / 2 + 50) {
             if (mouseY >= 150 + 22 && mouseY <= 200 + 22) {
                 // Pressed Play Button
-                State = GameState.GAME;
+                Game.setState(GameState.GAME);
             }
         }
 
@@ -203,7 +203,7 @@ public class Peripheral extends KeyAdapter implements MouseListener, MouseMotion
             if (mouseY >= 250 + 22 && mouseY <= 300 + 22) {
                 // Pressed Help Button
                 System.out.println("\nMouse Input: Help Button Pressed!");
-                State = GameState.HELP;
+                Game.setState(GameState.HELP);
             }
         }
 

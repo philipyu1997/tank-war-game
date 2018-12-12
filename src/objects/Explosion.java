@@ -17,13 +17,17 @@ public class Explosion extends GameObject {
     private Animation explosion_large;
     private Animation explosion_small;
     private Texture tex;
-
+    private SoundPlayer exp_large_snd;
+    private SoundPlayer exp_small_snd;
 
     public Explosion(Entity entity, int explosion_type, int x, int y, Texture tex) {
 
         super(entity, x, y);
         this.explosion_type = explosion_type;
         this.tex = tex;
+
+        exp_large_snd = new SoundPlayer(2, tex.exp_large_snd_path);
+        exp_small_snd = new SoundPlayer(2, tex.exp_small_snd_path);
 
         explosion_large = new Animation(10, tex.explosion_large);
         explosion_small = new Animation(10, tex.explosion_small);
@@ -74,6 +78,22 @@ public class Explosion extends GameObject {
                 return (new Rectangle(x, y, tex.explosion_large[0].getWidth(), tex.explosion_large[0].getHeight()));
             default:
                 return (new Rectangle(x, y, tex.explosion_small[0].getWidth(), tex.explosion_small[0].getHeight()));
+        }
+
+    }
+
+    public void playExplosion() {
+
+        switch (explosion_type) {
+            case 1:
+                exp_small_snd.play();
+                break;
+            case 2:
+                exp_large_snd.play();
+                break;
+            default:
+                exp_small_snd.play();
+                break;
         }
 
     }

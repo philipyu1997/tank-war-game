@@ -11,23 +11,31 @@ import java.util.logging.Logger;
  * @author Philip Yu
  */
 public class SoundPlayer {
-    private AudioInputStream soundStream;
+
+    // VARIABLES
     private String soundFile;
+    private int type;
+
+    // OBJECTS
+    private AudioInputStream soundStream;
     private Clip clip;
-    private int type;//1 for sounds that needs to be played all the time
+
+    // 1 for sounds that needs to be played all the time
     // 2 for sounds that only need to be played once
 
-
     public SoundPlayer(int type, String soundFile) {
+
         this.soundFile = soundFile;
         this.type = type;
+
         try {
             soundStream = AudioSystem.getAudioInputStream(new File(soundFile));
             clip = AudioSystem.getClip();
             clip.open(soundStream);
         } catch (Exception e) {
-            System.out.println(e.getMessage() + "No sound documents are fouond");
+            System.out.println(e.getMessage() + "Unable to load sound resources!");
         }
+
         if (this.type == 1) {
             Runnable myRunnable = new Runnable() {
                 public void run() {
@@ -42,16 +50,23 @@ public class SoundPlayer {
                     }
                 }
             };
+
             Thread thread = new Thread(myRunnable);
             thread.start();
         }
+
     }
 
     public void play() {
+
         clip.start();
+
     }
 
     public void stop() {
+
         clip.stop();
+
     }
+
 } // end class SoundPlayer

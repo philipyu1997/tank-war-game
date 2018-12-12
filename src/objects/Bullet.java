@@ -24,8 +24,6 @@ public class Bullet extends MovableObject {
     private Handler handler;
     private Texture tex;
     private Explosion explosion;
-    private SoundPlayer exp_large_snd;
-    private SoundPlayer exp_small_snd;
 
     public Bullet(Entity entity, int bulletType, int x, int y, int velX, int velY, int angle, Handler handler) {
 
@@ -35,8 +33,6 @@ public class Bullet extends MovableObject {
                 velX * 10, velY * 10, angle);
         this.tex = Game.getInstance();
         this.handler = handler;
-        exp_large_snd = new SoundPlayer(2, tex.exp_large_snd_path);
-        exp_small_snd = new SoundPlayer(2, tex.exp_small_snd_path);
 
         switch (bulletType) {
             case 0:
@@ -99,7 +95,7 @@ public class Bullet extends MovableObject {
                     explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                     handler.addObject(explosion);
                     handler.removeObject(this);
-                    exp_small_snd.play();
+                    explosion.playExplosion();
                 }
 
             } else if (gameObject.getEntity() == Entity.Wall2) {
@@ -109,7 +105,7 @@ public class Bullet extends MovableObject {
                     explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                     handler.addObject(explosion);
                     handler.removeObject(this);
-                    exp_small_snd.play();
+                    explosion.playExplosion();
                 }
             }
 
@@ -122,7 +118,7 @@ public class Bullet extends MovableObject {
                         explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                         handler.addObject(explosion);
                         handler.removeObject(this);
-                        exp_small_snd.play();
+                        explosion.playExplosion();
 
                         if (player.getHealth() > 0) {
                             player.setHealth(player.getHealth() - SHELL_DAMAGE);
@@ -131,7 +127,7 @@ public class Bullet extends MovableObject {
                             player.setHealth(100);
                         } else if (player.getLives() == 1) {
                             player.setLives(player.getLives() - 1);
-                            exp_large_snd.play();
+                            explosion.playExplosion();
                             explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                             handler.addObject(explosion);
                             handler.removeObject(player);
@@ -149,7 +145,7 @@ public class Bullet extends MovableObject {
                         explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                         handler.addObject(explosion);
                         handler.removeObject(this);
-                        exp_small_snd.play();
+                        explosion.playExplosion();
 
                         if (enemy.getHealth() > 0) {
                             enemy.setHealth(enemy.getHealth() - SHELL_DAMAGE);
@@ -158,7 +154,7 @@ public class Bullet extends MovableObject {
                             enemy.setHealth(100);
                         } else if (enemy.getLives() == 1) {
                             enemy.setLives(enemy.getLives() - 1);
-                            exp_large_snd.play();
+                            explosion.playExplosion();
                             explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
                             handler.addObject(explosion);
                             handler.removeObject(enemy);
