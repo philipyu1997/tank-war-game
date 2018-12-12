@@ -10,13 +10,13 @@ import java.awt.image.BufferedImage;
 public class Texture {
 
     // PATHS
-    private String bmp_path = "src/res/images/bmp/";
-    private String png_path = "src/res/images/png/transparent/";
-    private String exp_large_path = "src/res/images/png/frames/transparent/Explosion_large_transparent/";
-    private String exp_small_path = "src/res/images/png/frames/transparent/Explosion_small_transparent/";
-    private String pickup_path = "src/res/images/png/frames/transparent/Pickup_transparent/";
-    private String weapon_path = "src/res/images/png/frames/transparent/Weapon_transparent/";
-    private String null_path = "src/res/images/png/frames/null.png";
+    private String bmp_path = "resources/images/bmp/";
+    private String png_path = "resources/images/png/transparent/";
+    private String exp_large_path = "resources/images/png/frames/transparent/Explosion_large_transparent/";
+    private String exp_small_path = "resources/images/png/frames/transparent/Explosion_small_transparent/";
+    private String pickup_path = "resources/images/png/frames/transparent/Pickup_transparent/";
+    private String weapon_path = "resources/images/png/frames/transparent/Weapon_transparent/";
+    private String null_path = "resources/images/png/frames/null.png";
     private String ext_png = ".png";
     private String ext_bmp = ".bmp";
     private String ext_gif = ".gif";
@@ -47,9 +47,9 @@ public class Texture {
 
         BufferedImageLoader loader = new BufferedImageLoader();
 
-        background_sound = new SoundPlayer(1, "src/res/sound/Music.wav");
-        exp_large_snd_path = "src/res/sound/Explosion_large.wav";
-        exp_small_snd_path = "src/res/sound/Explosion_small.wav";
+        background_sound = new SoundPlayer(1, "resources/sound/Music.wav");
+        exp_large_snd_path = "resources/sound/Explosion_large.wav";
+        exp_small_snd_path = "resources/sound/Explosion_small.wav";
 
         explosion_large[0] = loader.loadImage(exp_large_path + "explosion_large_frame_0" + ext_png);
         explosion_large[1] = loader.loadImage(exp_large_path + "explosion_large_frame_1" + ext_png);

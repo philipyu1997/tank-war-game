@@ -19,7 +19,7 @@ public class BufferedImageLoader {
         try {
             image = read(new File(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage() + " Unable to load image resources!");
         }
 
         return image;

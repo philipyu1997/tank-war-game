@@ -1,6 +1,9 @@
 package objects;
 
-import framework.*;
+import framework.Entity;
+import framework.GameObject;
+import framework.MovableObject;
+import framework.Texture;
 import window.Game;
 import window.Handler;
 

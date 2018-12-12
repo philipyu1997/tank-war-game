@@ -33,7 +33,7 @@ public class SoundPlayer {
             clip = AudioSystem.getClip();
             clip.open(soundStream);
         } catch (Exception e) {
-            System.out.println(e.getMessage() + "Unable to load sound resources!");
+            System.out.println(e.getMessage() + " Unable to load sound resources!");
         }
 
         if (this.type == 1) {
