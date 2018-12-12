@@ -4,7 +4,11 @@ public enum Entity {
 
     Player,
     Enemy,
-    Bullet,
+
+    Shell,
+    Rocket,
+    Bouncing,
+
     Block,
     Pickup,
     Explosion

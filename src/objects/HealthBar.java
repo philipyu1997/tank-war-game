@@ -35,6 +35,7 @@ public class HealthBar {
             Game.setState(GameState.END);
         }
 
+        g.setColor(Color.GREEN);
         g.drawString("Player Lives: " + p1.getLives(), 15, 90);
         g.drawString("Player Health: " + p1.getHealth(), 15, 105);
 
@@ -53,6 +54,7 @@ public class HealthBar {
             Game.setState(GameState.END);
         }
 
+        g.setColor(Color.GREEN);
         g.drawString("Enemy Lives: " + p2.getLives(), WINDOW_WIDTH - 135, 90);
         g.drawString("Enemy Health: " + p2.getHealth(), WINDOW_WIDTH - 135, 105);
 

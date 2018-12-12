@@ -55,7 +55,6 @@ public class Game extends JPanel {
     private Menu menu;
     private HealthBar health;
     private Map map;
-    private Sound sound;
     private Pickup pickup;
     private int spaceX = 15;
     private int spaceY = 105;

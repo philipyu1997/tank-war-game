@@ -42,7 +42,6 @@ public class Player extends MovableObject {
     private boolean isShooting;
     private int health;
     private int lives;
-    private int bulletType;
 
     public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, int health, int lives) {
 
@@ -55,7 +54,6 @@ public class Player extends MovableObject {
         this.width = tex.spr_tank[player].getWidth();
         this.height = tex.spr_tank[player].getHeight();
         this.isShooting = false;
-        this.bulletType = 0;
 
         if (entity == Entity.Player) {
             playerImage = tex.spr_tank[0];
@@ -122,7 +120,6 @@ public class Player extends MovableObject {
             if (gameObject instanceof Pickup) {
                 if (getBounds().intersects(gameObject.getBounds())) {
                     handler.removeObject(gameObject);
-                    bulletType = rand.nextInt(3);
                 }
             }
 
@@ -304,7 +301,7 @@ public class Player extends MovableObject {
 
     private void fire() {
 
-        Bullet bullet = new Bullet(Entity.Bullet, this, x, y, velX, velY, angle, bulletType, game, handler);
+        Bullet bullet = new Bullet(Entity.Rocket, x, y, velX, velY, angle, game, handler);
 
         bulletList.add(bullet);
         handler.addObject(bullet);

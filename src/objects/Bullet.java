@@ -19,7 +19,7 @@ public class Bullet extends MovableObject {
 
 
     // CONSTANTS
-    private static int SHELL_DAMAGE = 10;
+    private static int SHELL_DAMAGE;
     private final int MOVEMENT_SPEED = 4;
     private int explosion_type;
 
@@ -30,31 +30,48 @@ public class Bullet extends MovableObject {
     private Texture tex;
     private Explosion explosion;
 
-    public Bullet(Entity entity, Player player, int x, int y, int velX, int velY, int angle, int bulletType, Game game, Handler handler) {
-
+    public Bullet(Entity entity, int x, int y, int velX, int velY, int angle, Game game, Handler handler) {
 
         super(entity,
-                x + player.getPlayerImage().getWidth() / 3,
-                y + player.getPlayerImage().getHeight() / 3,
+                x + 64 / 3,
+                y + 64 / 3,
                 velX * 10, velY * 10, angle);
         this.tex = Game.getInstance();
         this.game = game;
         this.handler = handler;
 
-        switch (bulletType) {
-            case 0:
-                this.bulletImage = tex.spr_weapon[bulletType];
-                break;
-            case 1:
-                this.bulletImage = tex.spr_weapon[bulletType];
-                break;
-            case 2:
-                this.bulletImage = tex.spr_weapon[bulletType];
-                break;
-            default:
-                this.bulletImage = tex.spr_weapon[0];
-                break;
+        if (entity == Entity.Shell) {
+            bulletImage = tex.spr_weapon[0];
+            explosion_type = 1;
+            SHELL_DAMAGE = 10;
+        } else if (entity == Entity.Rocket) {
+            bulletImage = tex.spr_weapon[1];
+            explosion_type = 2;
+            SHELL_DAMAGE = 20;
+        } else if (entity == Entity.Bouncing) {
+            bulletImage = tex.spr_weapon[2];
+            explosion_type = 3;
+            SHELL_DAMAGE = 30;
+        } else {
+            bulletImage = tex.spr_weapon[0];
+            explosion_type = 1;
+            SHELL_DAMAGE = 10;
         }
+
+//        switch (bulletType) {
+//            case 0:
+//                this.bulletImage = tex.spr_weapon[bulletType];
+//                break;
+//            case 1:
+//                this.bulletImage = tex.spr_weapon[bulletType];
+//                break;
+//            case 2:
+//                this.bulletImage = tex.spr_weapon[bulletType];
+//                break;
+//            default:
+//                this.bulletImage = tex.spr_weapon[0];
+//                break;
+//        }
 
     }
 
