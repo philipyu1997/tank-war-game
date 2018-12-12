@@ -1,16 +1,20 @@
 package framework;
 
+/**
+ * @author Philip Yu
+ */
 public enum Entity {
 
-    Player,
-    Enemy,
+    Tank1,
+    Tank2,
 
-    Shell,
     Rocket,
     Bouncing,
+    Energy,
 
-    Block,
-    Pickup,
+    Wall1,
+    Wall2,
+
     Explosion
 
-}
+} // end enum Entity

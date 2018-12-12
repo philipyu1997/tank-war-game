@@ -6,28 +6,36 @@ import framework.Texture;
 import window.Game;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
  * @author Philip Yu
  */
-public class Block extends GameObject {
+public class Wall extends GameObject {
 
     // VARIABLES
     private int width, height;
     private int wallType;
-    private boolean breakable;
 
     // OBJECTS
     private Texture tex = Game.getInstance();
+    private BufferedImage wallImage;
 
-    public Block(Entity entity, int wallType, int x, int y, boolean breakable) {
+    public Wall(Entity entity, int wallType, int x, int y) {
 
         super(entity, x, y);
         this.wallType = wallType;
         this.width = tex.spr_wall[wallType].getWidth();
         this.height = tex.spr_wall[wallType].getHeight();
-        this.breakable = breakable;
+
+        if (entity == Entity.Wall1) {
+            wallImage = tex.spr_wall[0];
+        } else if (entity == Entity.Wall2) {
+            wallImage = tex.spr_wall[1];
+        } else {
+            wallImage = tex.spr_wall[0];
+        }
 
     }
 
@@ -37,12 +45,7 @@ public class Block extends GameObject {
 
     public void render(Graphics g) {
 
-        switch (wallType) {
-            case 0:
-                g.drawImage(tex.spr_wall[wallType], x, y, null);
-            case 1:
-                g.drawImage(tex.spr_wall[wallType], x, y, null);
-        }
+        g.drawImage(wallImage, x, y, null);
 
     }
 
@@ -52,16 +55,4 @@ public class Block extends GameObject {
 
     }
 
-    public boolean isBreakable() {
-
-        return breakable;
-
-    }
-
-    public void setBreakable(boolean breakable) {
-
-        this.breakable = breakable;
-
-    }
-
-} // end class Block
+} // end class Wall

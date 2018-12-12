@@ -1,5 +1,8 @@
 package framework;
 
+/**
+ * @author Philip Yu
+ */
 public enum GameState {
 
     MENU,
@@ -7,4 +10,4 @@ public enum GameState {
     P1_WINS,
     P2_WINS,
 
-}
+} // end enum GameState

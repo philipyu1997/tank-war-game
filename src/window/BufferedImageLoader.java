@@ -11,6 +11,7 @@ import static javax.imageio.ImageIO.read;
  */
 public class BufferedImageLoader {
 
+    // IMAGES
     private BufferedImage image;
 
     public BufferedImage loadImage(String path) {

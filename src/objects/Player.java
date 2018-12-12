@@ -12,7 +12,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author Philip Yu
@@ -23,41 +22,41 @@ public class Player extends MovableObject {
     private final int MOVEMENT_SPEED = 4;
     private final int ROTATION_SPEED = 2;
 
-    // OBJECTS
-    private BufferedImage playerImage;
-    Random rand = new Random();
-    private Handler handler;
-    private Texture tex;
-    List<Bullet> bulletList = new ArrayList<>();
-    private Game game;
+    // VARIABLES
+    private int bulletType;
+    private int health;
+    private int lives;
     private int width;
     private int height;
-    // VARIABLES
-    private int player;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean ShootPressed;
     private boolean isShooting;
-    private int health;
-    private int lives;
 
-    public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Game game, Handler handler, int health, int lives) {
+    // OBJECTS
+    private List<Bullet> bulletList = new ArrayList<>();
+    private BufferedImage playerImage;
+    private Entity bulletEntity;
+    private Handler handler;
+    private Texture tex;
+
+    public Player(Entity entity, int x, int y, int velX, int velY, int angle, Texture tex, Handler handler, int health, int lives) {
 
         super(entity, x, y, velX, velY, angle);
         this.handler = handler;
         this.tex = Game.getInstance();
-        this.game = game;
         this.health = health;
         this.lives = lives;
-        this.width = tex.spr_tank[player].getWidth();
-        this.height = tex.spr_tank[player].getHeight();
+        this.width = tex.spr_tank[0].getWidth();
+        this.height = tex.spr_tank[0].getHeight();
         this.isShooting = false;
+        bulletType = 0;
 
-        if (entity == Entity.Player) {
+        if (entity == Entity.Tank1) {
             playerImage = tex.spr_tank[0];
-        } else if (entity == Entity.Enemy) {
+        } else if (entity == Entity.Tank2) {
             playerImage = tex.spr_tank[1];
         }
 
@@ -99,27 +98,40 @@ public class Player extends MovableObject {
         for (int i = 0; i < handler.objectList.size(); ++i) {
             GameObject gameObject = handler.objectList.get(i);
 
-            if (gameObject instanceof Block) {
+            if (gameObject instanceof Wall) {
                 if (getBoundsTop().intersects(gameObject.getBounds())) {
-                    y = gameObject.getY() + tex.spr_tank[player].getHeight() / 2 + 2;
+                    y = gameObject.getY() + tex.spr_tank[0].getHeight() / 2 + 2;
                 }
 
                 if (getBoundsBottom().intersects(gameObject.getBounds())) {
-                    y = gameObject.getY() - tex.spr_tank[player].getHeight() - 2;
+                    y = gameObject.getY() - tex.spr_tank[0].getHeight() - 2;
                 }
 
                 if (getBoundsLeft().intersects(gameObject.getBounds())) {
-                    x = gameObject.getX() + tex.spr_tank[player].getWidth() / 2 + 2;
+                    x = gameObject.getX() + tex.spr_tank[0].getWidth() / 2 + 2;
                 }
 
                 if (getBoundsRight().intersects(gameObject.getBounds())) {
-                    x = gameObject.getX() - tex.spr_tank[player].getWidth() - 2;
+                    x = gameObject.getX() - tex.spr_tank[0].getWidth() - 2;
                 }
             }
 
-            if (gameObject instanceof Pickup) {
-                if (getBounds().intersects(gameObject.getBounds())) {
-                    handler.removeObject(gameObject);
+            if (gameObject instanceof PowerUp) {
+                if (gameObject.getEntity() == Entity.Rocket) {
+                    if (getBounds().intersects(gameObject.getBounds())) {
+                        handler.removeObject(gameObject);
+                        bulletType = 1;
+                    }
+                } else if (gameObject.getEntity() == Entity.Bouncing) {
+                    if (getBounds().intersects(gameObject.getBounds())) {
+                        handler.removeObject(gameObject);
+                        bulletType = 2;
+                    }
+                } else if (gameObject.getEntity() == Entity.Energy) {
+                    if (getBounds().intersects(gameObject.getBounds())) {
+                        handler.removeObject(gameObject);
+                        bulletType = 3;
+                    }
                 }
             }
 
@@ -129,21 +141,21 @@ public class Player extends MovableObject {
 
     private void checkBorder() {
 
-        // LEFT
-        if (x <= 0)
-            x = 0;
-
-        // RIGHT
-        if (x >= Game.getGameWidth() - tex.spr_tank[player].getWidth())
-            x = Game.getGameWidth() - tex.spr_tank[player].getWidth();
-
-        // TOP
+        // TOP BORDER
         if (y < 0)
             y = 0;
 
-        // BOTTOM
-        if (y >= Game.getGameHeight() - tex.spr_tank[player].getHeight())
-            y = Game.getGameHeight() - tex.spr_tank[player].getHeight();
+        // BOTTOM BORDER
+        if (y >= Game.getGameHeight() - tex.spr_tank[0].getHeight())
+            y = Game.getGameHeight() - tex.spr_tank[0].getHeight();
+
+        // LEFT BORDER
+        if (x <= 0)
+            x = 0;
+
+        // RIGHT BORDER
+        if (x >= Game.getGameWidth() - tex.spr_tank[0].getWidth())
+            x = Game.getGameWidth() - tex.spr_tank[0].getWidth();
 
     }
 
@@ -155,19 +167,12 @@ public class Player extends MovableObject {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(playerImage, rotation, null);
 
-//        g2d.setColor(Color.WHITE);
-//        g2d.draw(getBounds());
-//        g2d.draw(getBoundsTop());
-//        g2d.draw(getBoundsBottom());
-//        g2d.draw(getBoundsLeft());
-//        g2d.draw(getBoundsRight());
-
     }
 
     @Override
     public Rectangle getBounds() {
 
-        return (new Rectangle(x, y, tex.spr_tank[player].getWidth(), tex.spr_tank[player].getHeight()));
+        return (new Rectangle(x, y, tex.spr_tank[0].getWidth(), tex.spr_tank[0].getHeight()));
 
     }
 
@@ -301,7 +306,7 @@ public class Player extends MovableObject {
 
     private void fire() {
 
-        Bullet bullet = new Bullet(Entity.Rocket, x, y, velX, velY, angle, game, handler);
+        Bullet bullet = new Bullet(bulletEntity, bulletType, x, y, velX, velY, angle, handler);
 
         bulletList.add(bullet);
         handler.addObject(bullet);
@@ -315,11 +320,15 @@ public class Player extends MovableObject {
     }
 
     public List<Bullet> getBulletList() {
+
         return bulletList;
+
     }
 
     public void setBulletList(List<Bullet> bulletList) {
+
         this.bulletList = bulletList;
+
     }
 
     public int getLives() {

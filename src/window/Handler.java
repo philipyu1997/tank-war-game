@@ -11,7 +11,10 @@ import java.util.List;
  */
 public class Handler {
 
+    // VARIABLES
     public List<GameObject> objectList = new LinkedList<>();
+
+    // OBJECTS
     private GameObject gameObject;
     private Game game;
 

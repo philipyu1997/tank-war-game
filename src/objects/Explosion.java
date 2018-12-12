@@ -13,12 +13,13 @@ import java.util.List;
  */
 public class Explosion extends GameObject {
 
-    private Texture tex;
+    // VARIABLES
+    private int explosion_type;
 
+    // OBJECTS
     private Animation explosion_large;
     private Animation explosion_small;
-
-    private int explosion_type;
+    private Texture tex;
 
     public Explosion(Entity entity, int explosion_type, int x, int y, Texture tex) {
 

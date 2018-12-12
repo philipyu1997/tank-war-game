@@ -17,61 +17,52 @@ import java.util.List;
  */
 public class Bullet extends MovableObject {
 
-
     // CONSTANTS
-    private static int SHELL_DAMAGE;
     private final int MOVEMENT_SPEED = 4;
+    private int SHELL_DAMAGE;
     private int explosion_type;
 
     // OBJECTS
     private BufferedImage bulletImage;
-    private Game game;
     private Handler handler;
     private Texture tex;
     private Explosion explosion;
 
-    public Bullet(Entity entity, int x, int y, int velX, int velY, int angle, Game game, Handler handler) {
+    public Bullet(Entity entity, int bulletType, int x, int y, int velX, int velY, int angle, Handler handler) {
 
         super(entity,
                 x + 64 / 3,
                 y + 64 / 3,
                 velX * 10, velY * 10, angle);
         this.tex = Game.getInstance();
-        this.game = game;
         this.handler = handler;
 
-        if (entity == Entity.Shell) {
-            bulletImage = tex.spr_weapon[0];
-            explosion_type = 1;
-            SHELL_DAMAGE = 10;
-        } else if (entity == Entity.Rocket) {
-            bulletImage = tex.spr_weapon[1];
-            explosion_type = 2;
-            SHELL_DAMAGE = 20;
-        } else if (entity == Entity.Bouncing) {
-            bulletImage = tex.spr_weapon[2];
-            explosion_type = 3;
-            SHELL_DAMAGE = 30;
-        } else {
-            bulletImage = tex.spr_weapon[0];
-            explosion_type = 1;
-            SHELL_DAMAGE = 10;
+        switch (bulletType) {
+            case 0:
+                bulletImage = tex.spr_weapon[0];
+                explosion_type = 1;
+                SHELL_DAMAGE = 10;
+                break;
+            case 1:
+                bulletImage = tex.spr_weapon[1];
+                explosion_type = 2;
+                SHELL_DAMAGE = 20;
+                break;
+            case 2:
+                bulletImage = tex.spr_weapon[2];
+                explosion_type = 3;
+                SHELL_DAMAGE = 30;
+                break;
+            case 3:
+                bulletImage = tex.spr_weapon[3];
+                explosion_type = 2;
+                SHELL_DAMAGE = 40;
+                break;
+            default:
+                bulletImage = tex.spr_weapon[0];
+                explosion_type = 1;
+                SHELL_DAMAGE = 10;
         }
-
-//        switch (bulletType) {
-//            case 0:
-//                this.bulletImage = tex.spr_weapon[bulletType];
-//                break;
-//            case 1:
-//                this.bulletImage = tex.spr_weapon[bulletType];
-//                break;
-//            case 2:
-//                this.bulletImage = tex.spr_weapon[bulletType];
-//                break;
-//            default:
-//                this.bulletImage = tex.spr_weapon[0];
-//                break;
-//        }
 
     }
 
@@ -88,7 +79,7 @@ public class Bullet extends MovableObject {
 
     }
 
-    public static double getShellDamage() {
+    public int getShellDamage() {
 
         return SHELL_DAMAGE;
 
@@ -99,26 +90,28 @@ public class Bullet extends MovableObject {
         for (int i = 0; i < handler.objectList.size(); ++i) {
             GameObject gameObject = handler.objectList.get(i);
 
-            if (gameObject.getEntity() == Entity.Block) {
-                Block block = (Block) gameObject;
+            if (gameObject.getEntity() == Entity.Wall1) {
+                Wall wall = (Wall) gameObject;
 
-                if (block.isBreakable()) {
-                    if (getBounds().intersects(block.getBounds())) {
-                        handler.removeObject(block);
-                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
-                        handler.addObject(explosion);
-                        handler.removeObject(this);
-                    }
-                } else if (!block.isBreakable()) {
-                    if (getBounds().intersects(block.getBounds())) {
-                        explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
-                        handler.addObject(explosion);
-                        handler.removeObject(this);
-                    }
+                if (getBounds().intersects(wall.getBounds())) {
+                    handler.removeObject(wall);
+                    explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                    handler.addObject(explosion);
+                    handler.removeObject(this);
+                }
+
+            } else if (gameObject.getEntity() == Entity.Wall2) {
+                Wall wall = (Wall) gameObject;
+
+                if (getBounds().intersects(wall.getBounds())) {
+                    explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                    handler.addObject(explosion);
+                    handler.removeObject(this);
                 }
             }
 
-            if (gameObject.getEntity() == Entity.Player) {
+            // TODO: FIX BUG WHERE WHEN PLAYER HEALTH REACHES 0, IT DOES NOT RESET UNTIL YOU HIT IT AGAIN
+            if (gameObject.getEntity() == Entity.Tank1) {
                 Player player = (Player) gameObject;
 
                 if (!player.getBulletList().contains(this)) {
@@ -129,17 +122,20 @@ public class Bullet extends MovableObject {
 
                         if (player.getHealth() > 0) {
                             player.setHealth(player.getHealth() - SHELL_DAMAGE);
-                        } else if (player.getHealth() == 0 && player.getLives() > 0) {
+                        } else if (player.getHealth() <= 0 && player.getLives() > 0) {
                             player.setLives(player.getLives() - 1);
                             player.setHealth(100);
                         } else if (player.getLives() == 0) {
                             handler.removeObject(player);
+                            explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                            handler.addObject(explosion);
                         }
                     }
                 }
             }
 
-            if (gameObject.getEntity() == Entity.Enemy) {
+            // TODO: FIX BUG WHERE WHEN PLAYER HEALTH REACHES 0, IT DOES NOT RESET UNTIL YOU HIT IT AGAIN
+            if (gameObject.getEntity() == Entity.Tank2) {
                 Player enemy = (Player) gameObject;
 
                 if (!enemy.getBulletList().contains(this)) {
@@ -150,11 +146,13 @@ public class Bullet extends MovableObject {
 
                         if (enemy.getHealth() > 0) {
                             enemy.setHealth(enemy.getHealth() - SHELL_DAMAGE);
-                        } else if (enemy.getHealth() == 0 && enemy.getLives() > 1) {
+                        } else if (enemy.getHealth() <= 0 && enemy.getLives() > 1) {
                             enemy.setLives(enemy.getLives() - 1);
                             enemy.setHealth(100);
                         } else if (enemy.getLives() == 0) {
                             handler.removeObject(enemy);
+                            explosion = new Explosion(Entity.Explosion, explosion_type, x, y, tex);
+                            handler.addObject(explosion);
                         }
                     }
                 }
@@ -171,9 +169,6 @@ public class Bullet extends MovableObject {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(bulletImage, rotation, null);
 
-//        g2d.setColor(Color.BLACK);
-//        g2d.draw(getBounds());
-
     }
 
     @Override
@@ -183,13 +178,13 @@ public class Bullet extends MovableObject {
 
     }
 
-    public void checkBorder() {
+    private void checkBorder() {
 
         if (x < 0) {
             handler.removeObject(this);
         }
 
-        if (x >= Game.getGameWidth() - 16) {
+        if (x >= Game.getGameWidth() - tex.spr_weapon[0].getWidth()) {
             handler.removeObject(this);
 
         }
@@ -199,7 +194,7 @@ public class Bullet extends MovableObject {
 
         }
 
-        if (y >= Game.getGameHeight() - 16) {
+        if (y >= Game.getGameHeight() - tex.spr_weapon[0].getWidth()) {
             handler.removeObject(this);
 
         }

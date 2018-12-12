@@ -10,12 +10,12 @@ import java.util.List;
 import static window.Game.State;
 
 /**
- * @author anthony-pc
+ * @author Anthony Souza
  * @author Philip Yu
  */
 public class Peripheral extends KeyAdapter implements MouseListener, MouseMotionListener {
 
-    // CONSTANTS
+    // INPUTS
     private static List<Integer> keysPressed = new ArrayList<>();
     private static int mouseX, mouseY;
 

@@ -7,8 +7,10 @@ import objects.Player;
  */
 public class Camera {
 
-    private int x, y;
+    // CONSTANTS
     private final int GAME_WIDTH = Game.getGameWidth();
+    // VARIABLES
+    private int x, y;
     private final int GAME_HEIGHT = Game.getGameHeight();
     private final int WINDOW_WIDTH = Game.getWindowWidth();
     private final int WINDOW_HEIGHT = Game.getWindowHeight();

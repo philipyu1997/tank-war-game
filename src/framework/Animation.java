@@ -8,15 +8,15 @@ import java.awt.image.BufferedImage;
  */
 public class Animation {
 
+    // IMAGES
+    private BufferedImage[] image;
+    private BufferedImage currentImg;
 
+    // VARIABLES
     private int speed;
     private int frames;
     private int index = 0;
     private int count = 0;
-
-    private BufferedImage[] image;
-
-    private BufferedImage currentImg;
 
     public Animation(int speed, BufferedImage[] image) {
 
@@ -26,6 +26,7 @@ public class Animation {
 
     }
 
+    // TODO: FIX BUG WHERE ANIMATION CONTINUOUSLY REPEATS
     public void runAnimation() {
 
         index++;
@@ -48,7 +49,9 @@ public class Animation {
 
         if (count > frames) {
             count = 0;
+            frames = 0; // TODO: REMOVE ME
         }
+
 
     }
 

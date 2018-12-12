@@ -9,9 +9,11 @@ import java.util.List;
 public abstract class GameObject {
 
     // VARIABLES
-    protected Entity entity;
     protected int x, y;
     protected int velX = 0, velY = 0;
+
+    // OBJECTS
+    protected Entity entity;
 
     public GameObject(Entity entity, int x, int y) {
 

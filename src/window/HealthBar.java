@@ -1,7 +1,7 @@
-package objects;
+package window;
 
 import framework.GameState;
-import window.Game;
+import objects.Player;
 
 import java.awt.*;
 
@@ -10,9 +10,12 @@ import java.awt.*;
  */
 public class HealthBar {
 
-    Player p1, p2;
-    int WINDOW_WIDTH = Game.getWindowWidth();
-    int WINDOW_HEIGHT = Game.getWindowHeight();
+    // VARIABLES
+    private int WINDOW_WIDTH = Game.getWindowWidth();
+    private int WINDOW_HEIGHT = Game.getWindowHeight();
+
+    // OBJECTS
+    private Player p1, p2;
 
     public HealthBar(Player p1, Player p2) {
 
