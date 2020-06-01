@@ -30,7 +30,17 @@ Tank War is a 2D multiplayer game where two tanks are fighting against one anoth
 
 ## Class Diagrams
 
+<img src="https://github.com/philipyu1997/tank-war-game/blob/master/screenshots/class%20diagram.png" width=50%><br>
+
 ## Game Preview
+
+<img src="https://github.com/philipyu1997/tank-war-game/blob/master/screenshots/menu.png" width=50%><br>
+
+<img src="https://github.com/philipyu1997/tank-war-game/blob/master/screenshots/help.png" width=50%><br>
+
+<img src="https://github.com/philipyu1997/tank-war-game/blob/master/screenshots/start.png" width=50%><br>
+
+<img src="https://github.com/philipyu1997/tank-war-game/blob/master/screenshots/gameplay.png" width=50%><br>
 
 ## Credits
 
