@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="tank-wars-game">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jar/tank-wars-game.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
