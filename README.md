@@ -1,18 +1,18 @@
-# Tank War
+# 🔫 Tank War
 
-## Table of Contents
-1. [Overview](#Overview)
-2. [Product Specs](#Product-Specs)
-3. [Class Diagrams](#Class-Diagrams)
-4. [Game Preview](#Game-Preview)
-5. [Credits](#Credits)
+## 📋 Table of Contents
+1. [Overview](#-Overview)
+2. [Product Specs](#-Product-Specs)
+3. [Class Diagrams](#-Class-Diagrams)
+4. [Game Preview](#-Game-Preview)
+5. [Credits](#-Credits)
 
-## Overview
+## 👀 Overview
 ### Description
 
 Tank War is a 2D multiplayer game where two tanks are fighting against one another. In order to defeat your opponent and win the game, you would need to strategize a plan and take advantage of the power ups that are spawned all across the map. Use the wide map to your advantage and dodge enemy attacks using the wall blocks that are set in place.
 
-## Product Specs
+## 📕 Product Specs
 ### User Stories
 
 - [x] Tank War shall have 2 players.
@@ -28,11 +28,11 @@ Tank War is a 2D multiplayer game where two tanks are fighting against one anoth
 - [x] User shall be able to have their tanks shoot bullets that collide with walls.
 - [x] User shall be able to have their tanks shoot bullets that collide with other tanks.
 
-## Class Diagrams
+## 📈 Class Diagrams
 
 <img src="https://raw.githubusercontent.com/py415/tank-war-game/master/screenshots/class%20diagram.png" width="50%" />
 
-## Game Preview
+## 🎬 Game Preview
 
 <img src="https://raw.githubusercontent.com/py415/tank-war-game/master/screenshots/menu.png" width="50%" />
 
@@ -42,6 +42,6 @@ Tank War is a 2D multiplayer game where two tanks are fighting against one anoth
 
 <img src="https://raw.githubusercontent.com/py415/tank-war-game/master/screenshots/gameplay.png" width="50%" />
 
-## Credits
+## 💳 Credits
 
 >This is a companion project to the Software Development Course from [San Francisco State University](https://sfsu.edu/).
